@@ -1,43 +1,21 @@
 # Last Light / Coastline
 
-An original open-world action-adventure game for the TI-84 Evo. Explore a compact South Florida-inspired city, follow Lena and Sol through a complete story, and take side trips by car, skiff, floatplane, jet ski, or airboat.
+Explore a 16-district city on your TI-84 Evo. Walk, drive the expressway, follow the story, and visit shops, the gym, or the pier.
 
-## Evo Open World edition
+## Install on your TI-84 Evo
 
-This smaller calculator build includes walking, driving, shops, a city map, and a story. Unzip [Coastline-Evo-Open.zip](Coastline-Evo-Open.zip), send all five Python files through TI Connect Evo, then run EVOOPEN from PRGM → Python App.
+1. Download and unzip the [current game](Coastline-Evo-Open.zip). Send all five Python files through [TI Connect Evo](https://connectevo.ti.com/) and choose **Replace** for matching files.
+2. For the optional video-frame loading screen, download and unzip the [Fullscreen Intro Pack](Coastline-Evo-Fullscreen-Intro.zip). Send its ten Python files as well.
+3. On the calculator, open **PRGM → Python App → EVOOPEN → Run**. Press **ENTER** to skip the intro.
 
-See the [version notes and rollback instructions](Coastline-Evo-Open/CHANGES.md).
+Updating from V16? For the game itself, you can replace just EVOOPEN.py and EVOSPORT.py. The V17 title confirms the update.
 
-### Fullscreen intro pack
+[Version notes and rollback links](Coastline-Evo-Open/CHANGES.md) · [Current Python source](Coastline-Evo-Open/)
 
-Install V17 of the game, then transfer the ten Python files from the [Fullscreen Intro ZIP](Coastline-Evo-Fullscreen-Intro.zip). The frames play automatically when you run EVOOPEN. ENTER skips to the menu.
+<details>
+<summary>Older editions</summary>
 
-### Optional clip intro
+- [Lite driving edition](Coastline-Evo-Lite.zip). Send LASTLITE.py and run LASTLITE.
+- [Original full Coastline](Coastline-Evo.zip) and its [play guide](Coastline/PLAY.md). This older build ran out of working memory on the Evo tested in this project.
 
-[Coastline-Evo-Clip.zip](Coastline-Evo-Clip.zip) shows two sharper stills sampled from the supplied video's first 20 seconds. Each is 96 × 54 with 16 colors. Press ENTER to skip. If you already have V13 or the earlier Clip Edition, replace only EVOSPORT.py and look for CLIP HD on the title menu.
-
-### Native image playback test
-
-[Download the 5 FPS test ZIP](Coastline-Evo-5FPS-Test.zip). Extract it and send CLIP00.8xv2 by itself using WebTILP first. If accepted, send the other nine pictures and replace CLIPTEST.py. The revised test uses 160 × 90 RLE pictures. Run CLIPTEST in the Python App. The test displays the slowest frame draw, late frame count and total elapsed time. It runs separately from the game.
-
-### Python frame playback test
-
-[Download the Python Frame Test](Coastline-Evo-Python-Frame-Test.zip). Extract it and send all four Python files through TI Connect Evo. Run EVFRTEST from the Python App. The test shows three sample frames and reports the slowest load and draw time. It runs separately from Coastline.
-
-[Download the faster frame test](Coastline-Evo-Fast-Frame-Test.zip) to try drawing larger rectangles with the same sample images. Replace all four test files together because the frame format changed.
-
-[Download the ordered frame test](Coastline-Evo-Ordered-Frame-Test.zip) to preview nine frames taken directly from the MP4 in time order from 0:00 to 0:18. Transfer all ten Python files, replace matching test files, and run EVFRTEST.
-
-## Compact driving edition
-
-If the full Coastline package runs out of memory on your calculator, try the standalone [Coastline-Evo-Lite.zip](Coastline-Evo-Lite.zip). It has a 12-district route map, delivery jobs, and perspective driving. It omits on-foot exploration and the phone systems. Transfer only LASTLITE.py from the ZIP and run LASTLITE in the Python App.
-
-## Download and install
-
-Download [Coastline-Evo.zip](Coastline-Evo.zip) and extract it on your computer. Send all ten Python files together to your calculator with [TI Connect Evo](https://connectevo.ti.com/). On the calculator, open **PRGM → Python App**, select **COASTRUN**, and press **Run**.
-
-Read [the play and installation guide](Coastline/PLAY.md) for controls, districts, checkpoint saves, transfer details, and activities. The original Python source files are in [Coastline/](Coastline/).
-
-![Coastline gameplay preview](Coastline/preview.png)
-
-The game is written in Python for the TI-84 Evo. It uses the built-in ti_draw, ti_system, and time modules. It does not write files or modify calculator variables. The story, map, characters, and artwork are original.
+</details>
