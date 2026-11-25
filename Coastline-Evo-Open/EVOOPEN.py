@@ -190,7 +190,7 @@ def play():
     draw.clear()
     skyline(7)
     box(INK,0,84,320,126)
-    label(SUN,12,110,"LAST LIGHT / DEAD AIR")
+    label(SUN,12,110,"LAST LIGHT / INPUT V2")
     label(MILK,12,139,"ENTER new story")
     label(MINT,12,164,"2nd load checkpoint")
     label(MILK,12,196,"CLEAR quit")
@@ -211,12 +211,17 @@ def play():
     tell("STREET CONTROLS",("ENTER: talk, shop, car, park","2nd: map and district pins","ALPHA: journal / checkpoint","CLEAR: journal and quit","DEL: phone and taxi"))
     perspective=True
     previous=None
+    controls=(UP,DOWN,LEFT,RIGHT,OK,MAP,EXIT,31,23,14)
+    while get_key(0)==OK:
+        pass
     while True:
         if perspective:
             render(s)
         else:
             previous=street_map(s,previous)
-        k=keywait((UP,DOWN,LEFT,RIGHT,OK,MAP,EXIT,31,23,14))
+        k=keywait(controls)
+        while get_key(0)==k:
+            pass
         if k==14:
             perspective=not perspective
             previous=None
