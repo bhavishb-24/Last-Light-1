@@ -1,5 +1,10 @@
 # Coastline Evo Open World changes
 
+## INPUT V14
+
+- EVOOPEN starts with a 3D loading animation through West Quay, downtown, the expressway and Northgate. It uses the game renderer and skips scheduled frames if drawing falls behind. The intro targets up to 5 FPS and runs for about 20 seconds, with ENTER to skip.
+- From V13, replace EVOSPORT.py and EVOVIEW.py together. The standard ZIP includes five Python files. The title settings and checkpoint format are unchanged. [Roll back to V13](https://github.com/bhavishb-24/Last-Light/raw/46a6607/Coastline-Evo-Open.zip).
+
 ## INPUT V13
 
 - EVOOPEN starts with an original animated Coastline intro capped at 20 seconds. Press ENTER to skip.

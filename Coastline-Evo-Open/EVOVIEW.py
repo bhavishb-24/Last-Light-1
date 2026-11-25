@@ -95,7 +95,7 @@ def building(cam,b):
     if h<cam[4]:
         face(cam,((l,h,a),(r,h,a),(r,h,f),(l,h,f)),c)
 
-def render(s):
+def render(s,cinematic=False):
     x,z=s['x'],s['z']
     f,c=sin(s['angle']),cos(s['angle'])
     cam=(x-6*f,z-6*c,f,c,3.4+road_height(x,z))
@@ -227,6 +227,8 @@ def render(s):
             if abs(sin(angle-s['angle']))>0.66:
                 sidecar(px,py,max(4,int(390/d)),tint)
             else: car(px,py,int(330/d),tint,False)
+    if cinematic:
+        return
     if s['drive']:
         car(160,142,67,PAINT[s['paint']],detail)
     else:

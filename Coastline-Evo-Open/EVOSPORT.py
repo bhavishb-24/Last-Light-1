@@ -116,24 +116,42 @@ def golf(s):
     tell("THREE HOLES CLEARED",("Course prize $15",))
 
 
+# Camera shots: start x/z, end x/z, start/end heading.
+INTRO_SHOTS=((8,64,30,64,1.57,1.72),
+             (64,8,64,31,0.0,.30),
+             (111,32,147,32,1.57,1.57),
+             (144,34,144,66,0.0,.18))
+INTRO_TITLES=("WEST QUAY","DOWNTOWN","COAST EXPRESSWAY","NORTHGATE")
+
 def intro():
-    skyline(7)
-    box(NIGHT,0,84,320,126)
-    label(SUN,14,114,"LAST LIGHT")
-    label(MINT,14,138,"COASTLINE")
-    label(MILK,14,196,"ENTER skip")
-    box(STEEL,14,153,292,9)
+    from EVOVIEW import render
+    scene=fresh()
+    scene['stage']=5
     start=monotonic()
     shown=-1
     while True:
-        key=get_key(0)
-        elapsed=monotonic()-start
-        if key in (OK,EXIT) or elapsed>=20:
+        if get_key(0) in (OK,EXIT):
             return
-        step=int(elapsed)
-        if step!=shown:
-            box(MINT,15,154,step*14,7)
-            shown=step
+        elapsed=monotonic()-start
+        if elapsed>=20:
+            return
+        frame=int(elapsed*5)
+        if frame==shown:
+            continue
+        shown=frame
+        shot=frame//25
+        progress=(frame%25)/25
+        x,z,u,v,heading,end=INTRO_SHOTS[shot]
+        scene['x']=x+(u-x)*progress
+        scene['z']=z+(v-z)*progress
+        scene['angle']=heading+(end-heading)*progress
+        scene['clock']=elapsed
+        render(scene,True)
+        box(INK,0,166,320,44)
+        label(SUN,8,184,"LOADING / "+INTRO_TITLES[shot])
+        box(STEEL,8,190,302,3)
+        box(MINT,8,190,3*(frame+1),3)
+        label(MILK,8,207,"ENTER skip")
 
 def front_menu():
     from EVOVIEW import person
@@ -160,7 +178,7 @@ def front_menu():
             if i==selected:
                 box(PINK,4,y-14,3,15)
             label(MILK if i==selected else STEEL,10,y,item)
-        label(MINT,8,181,"INPUT V13")
+        label(MINT,8,181,"INPUT V14")
         label(MILK,8,202,"ENTER select")
         key=keywait((UP,DOWN,OK,MAP,EXIT))
         if key==EXIT or (key==OK and selected==3):
