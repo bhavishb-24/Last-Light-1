@@ -8,6 +8,10 @@ This smaller calculator build includes walking, driving, shops, a city map, and 
 
 See the [version notes and rollback instructions](Coastline-Evo-Open/CHANGES.md).
 
+### Optional clip intro
+
+[Coastline-Evo-Clip.zip](Coastline-Evo-Clip.zip) includes ten frames sampled from the supplied video’s first 20 seconds. Press ENTER to skip the silent slideshow. If you already have V13, replace only EVOSPORT.py and look for V13 CLIP on the title menu.
+
 ## Compact driving edition
 
 If the full Coastline package runs out of memory on your calculator, try the standalone [Coastline-Evo-Lite.zip](Coastline-Evo-Lite.zip). It has a 12-district route map, delivery jobs, and perspective driving. It omits on-foot exploration and the phone systems. Transfer only LASTLITE.py from the ZIP and run LASTLITE in the Python App.
