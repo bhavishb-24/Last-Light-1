@@ -116,42 +116,65 @@ def golf(s):
     tell("THREE HOLES CLEARED",("Course prize $15",))
 
 
-# Camera shots: start x/z, end x/z, start/end heading.
-INTRO_SHOTS=((8,64,30,64,1.57,1.72),
-             (64,8,64,31,0.0,.30),
-             (111,32,147,32,1.57,1.57),
-             (144,34,144,66,0.0,.18))
-INTRO_TITLES=("WEST QUAY","DOWNTOWN","COAST EXPRESSWAY","NORTHGATE")
+def intro_card(card):
+    from EVOVIEW import person
+    box(INK,0,0,320,210)
+    if card in (0,2,3):
+        skyline(card+2)
+        box((44,91,112),0,84,320,86)
+        if card==0:
+            for x in (0,108,222):
+                box((118,83,115) if x==108 else (63,77,112),x,90,104,84)
+            person(51,171,82,MINT,0,False)
+            person(265,171,78,BLUE,0,False)
+            car(155,159,91,PINK,True)
+        elif card==2:
+            for x in (22,84,222,278):
+                palm(x,167,90-x%20,NIGHT)
+            disc(SUN,160,110,33)
+            car(162,168,136,MINT,True)
+        else:
+            box((30,66,88),0,101,320,70)
+            for x in (18,73,244,287):
+                line(STEEL,x,128,x,171)
+            line(MILK,0,128,319,128)
+            person(134,176,99,MINT,0,False)
+            person(190,176,105,BLUE,0,False)
+        box(NIGHT,5,5,152,40)
+        label(SUN,11,22,"LAST LIGHT")
+        label(MINT,11,40,"COASTLINE")
+    elif card==4:
+        box(VIOLET,107,57,106,66)
+        box(NIGHT,111,61,98,58)
+        label(SUN,119,88,"WAVE RADIO")
+        label(MINT,132,109,"84 FM")
+    box(INK,0,175,320,35)
+    label(MILK,8,207,"ENTER skip")
 
 def intro():
-    from EVOVIEW import render
-    scene=fresh()
-    scene['stage']=5
     start=monotonic()
-    shown=-1
+    previous=-1
+    pulse=-1
     while True:
         if get_key(0) in (OK,EXIT):
             return
         elapsed=monotonic()-start
         if elapsed>=20:
             return
-        frame=int(elapsed*5)
-        if frame==shown:
+        card=0 if elapsed<4 else (1 if elapsed<8 else
+             (2 if elapsed<12 else (3 if elapsed<16 else 4)))
+        if card!=previous:
+            intro_card(card)
+            previous=card
+        step=int(elapsed*4)
+        if step==pulse:
             continue
-        shown=frame
-        shot=frame//25
-        progress=(frame%25)/25
-        x,z,u,v,heading,end=INTRO_SHOTS[shot]
-        scene['x']=x+(u-x)*progress
-        scene['z']=z+(v-z)*progress
-        scene['angle']=heading+(end-heading)*progress
-        scene['clock']=elapsed
-        render(scene,True)
-        box(INK,0,166,320,44)
-        label(SUN,8,184,"LOADING / "+INTRO_TITLES[shot])
-        box(STEEL,8,190,302,3)
-        box(MINT,8,190,3*(frame+1),3)
-        label(MILK,8,207,"ENTER skip")
+        pulse=step
+        if card==1:
+            box(INK,89,80,142,25)
+            for star in range(1+(step-16)//3):
+                label(SUN if star%2 else MILK,98+21*star,98,"*")
+        box(MINT,8,182,3*(step+1),3)
 
 def front_menu():
     from EVOVIEW import person
@@ -178,7 +201,7 @@ def front_menu():
             if i==selected:
                 box(PINK,4,y-14,3,15)
             label(MILK if i==selected else STEEL,10,y,item)
-        label(MINT,8,181,"INPUT V14")
+        label(MINT,8,181,"INPUT V15")
         label(MILK,8,202,"ENTER select")
         key=keywait((UP,DOWN,OK,MAP,EXIT))
         if key==EXIT or (key==OK and selected==3):

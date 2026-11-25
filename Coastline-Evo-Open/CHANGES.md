@@ -1,5 +1,11 @@
 # Coastline Evo Open World changes
 
+## INPUT V15
+
+- The loading screen uses original color artwork in a 2D sequence inspired by the reference clip: illustrated collage, animated stars, two coastal cards and a WAVE radio end card.
+- The sequence lasts up to 20 seconds. Press ENTER to skip to the title menu.
+- Replace EVOSPORT.py and EVOVIEW.py from V14. The ZIP still contains five Python files. [Roll back to V14](https://github.com/bhavishb-24/Last-Light/raw/167015f/Coastline-Evo-Open.zip).
+
 ## INPUT V14
 
 - EVOOPEN starts with a 3D loading animation through West Quay, downtown, the expressway and Northgate. It uses the game renderer and skips scheduled frames if drawing falls behind. The intro targets up to 5 FPS and runs for about 20 seconds, with ENTER to skip.
