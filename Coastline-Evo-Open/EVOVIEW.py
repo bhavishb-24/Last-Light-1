@@ -233,3 +233,35 @@ def render(s,buffer=None):
     elif k=='local': hint='ENTER talk to local'
     elif k=='car': hint="ENTER drive coupe"
     label(MILK,5,207,s['msg'] if s['ttl']>0 else hint)
+
+
+def street_map(s,previous):
+    x=int(30+s['x']*2.4)
+    y=int(148-s['z']*1.45)
+    if previous is None:
+        box(INK,0,0,320,210)
+        for n in range(len(NAMES)):
+            u,v=center(n)
+            px=(30,106,183,260)[n%4]
+            py=(55,101,148)[n//4]
+            box(ROAD,px-3,py-3,7,7)
+            if n%4<3:
+                box(ROAD,px,py-3,(76,77,77)[n%4],7)
+            if n<8:
+                box(ROAD,px-3,py,7,(46,47)[n//4])
+        box(NIGHT,0,171,320,39)
+        label(MINT,5,206,"2nd map / DEL phone / TRACE 3D")
+    elif previous[:2]!=(x,y):
+        px,py=previous[:2]
+        box(INK,px-1,py-1,3,3)
+        for a in range(px-1,px+2):
+            for b in range(py-1,py+2):
+                if (27<=a<=263 and any(abs(b-j)<=3 for j in (55,101,148))) or (52<=b<=151 and any(abs(a-j)<=3 for j in (30,106,183,260))):
+                    box(ROAD,a,b,1,1)
+    status=(district(s['x'],s['z']),s['cash'],s['drive'],gps(s))
+    if previous is None or previous[:2]!=(x,y) or previous[2][2]!=s['drive']:
+        box(GOLD if s['drive'] else MINT,x-1,y-1,3,3)
+    if previous is None or previous[2]!=status:
+        box(NIGHT,0,171,320,22)
+        label(MILK,5,190,NAMES[status[0]]+" $"+str(s['cash'])+" "+status[3])
+    return x,y,status
