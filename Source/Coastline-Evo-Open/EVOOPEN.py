@@ -30,16 +30,16 @@ def venue(s,n):
         tell("PARCEL SIGNED  +$45",("The night clerk signs for it.","Dispatch has more work."))
         return
     if n==0 and t==0:
-        tell("MARA / DEAD AIR",("They sold our frequency.","Ivo has a recording of it.","Find the PIER sign at Sun Pier.","Park and use the PIER counter."))
+        tell("MARA / DEAD AIR",("They sold our frequency.","Ivo has a recording of it.","Find the PIER sign at Sun Pier.","Park and use the PIER counter."),0)
         s['stage']=1
     elif n==7 and t==1:
-        tell("IVO / THE PIER TAPE",("Mara's brother signed the deal.","Take $30 for a signal valve.","Go to PARTS in Glasshouse.","Buy the valve for $20."))
+        tell("IVO / THE PIER TAPE",("Mara's brother signed the deal.","Take $30 for a signal valve.","Go to PARTS in Glasshouse.","Buy the valve for $20."),1)
         s['stage']=2
         earn(s,30)
     elif n==2 and t==3:
         if tune():
             s['stage']=4
-            tell("MARA / OPEN CHANNEL",("That's my brother's voice.","PIXEL airs the original tape.","VELVET disguises his voice.","Visit one door to choose."))
+            tell("MARA / OPEN CHANNEL",("That's my brother's voice.","PIXEL airs the original tape.","VELVET disguises his voice.","Visit one door to choose."),0)
     elif t==4 and n in (6,9):
         public=n==6
         s['stage']=5 if public else 6
@@ -121,11 +121,11 @@ def follow_wire(s,n):
     earn(s,8 if next_stop>=0 else 150)
     if next_stop>=0:
         tell("THE RELIEF TAPE",(line_text,"Next: "+NAMES[next_stop],
-                              "Use the "+SIGNS[next_stop]+" counter."))
+                              "Use the "+SIGNS[next_stop]+" counter."),0)
         notice(s,"Evidence filed / $8")
     else:
         tell("THE RELIEF TAPE / COMPLETE",("Mara airs the evidence in full.",
-             "The stolen relief fund is traced.","Campaign complete / Bonus $150."))
+             "The stolen relief fund is traced.","Campaign complete / Bonus $150."),0)
         notice(s,"Campaign complete")
 
 def interact(s):
@@ -152,7 +152,7 @@ def interact(s):
             venue(s,n)
     elif k=='local':
         lines=(("Ivo kept every pier show.","Look for the gold dot."),("The Foundry does gold flake.","Dispatch pays for the paint."),("Start the rally at the Lido.","Gold hoops mark each gate."))
-        tell(("ANA / TECH","KIT / RUNNER","RED / DRIVER")[n],lines[n])
+        tell(("ANA / TECH","KIT / RUNNER","RED / DRIVER")[n],lines[n],n+2)
     elif k=='disc':
         s['records']|=1<<n
         reward=50 if s['records']==7 else 15

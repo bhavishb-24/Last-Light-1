@@ -1,5 +1,11 @@
 # Coastline Evo Open World changes
 
+## INPUT V21
+
+- Added animated portraits for Mara, Ivo, Ana, Kit and Red in dialogue. Only the mouth area redraws during the brief animation. ENTER continues or dismisses the dialogue.
+- Replace all five game files. The optional intro pack can stay installed.
+- [Roll back to V20](https://github.com/bhavishb-24/Last-Light/raw/34cd121/Coastline-Evo-Open.zip).
+
 ## INPUT V20
 
 - Nearby Full mode facades add awnings, split windows and country driveways. Storefronts use their building colors. Clear skies gain an extra horizon band in Full, and tower windows glow after dark.

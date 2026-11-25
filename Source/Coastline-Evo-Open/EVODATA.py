@@ -341,9 +341,35 @@ def sheet(title,lines,footer):
     box(NIGHT,0,183,320,27)
     label(MINT,8,204,footer)
 
-def tell(title,lines):
+def tell(title,lines,speaker=None):
     sheet(title,lines,"ENTER continue")
-    keywait((OK,EXIT))
+    if speaker is None:
+        keywait((OK,EXIT))
+        return
+
+    hair,skin,shirt=((INK,(193,128,104),PINK),
+                     (ROAD,(224,167,120),BLUE),
+                     (VIOLET,(168,106,88),MINT),
+                     (NIGHT,(232,176,143),VIOLET),
+                     (INK,(121,79,67),GOLD))[speaker]
+    box(NIGHT,257,139,55,43)
+    box(shirt,266,172,37,10)
+    box(skin,274,146,21,28)
+    box(hair,272,143,25,8)
+    if speaker in (0,2):
+        box(hair,270,148,5,20)
+    box(INK,278,156,3,2)
+    box(INK,288,156,3,2)
+    start=monotonic()
+    previous=-1
+    while True:
+        if get_key(0) in (OK,EXIT):
+            return
+        frame=min(6,int((monotonic()-start)*7))
+        if frame!=previous:
+            box(skin,281,165,8,4)
+            box(hair,282,166,6,1+2*(frame%2))
+            previous=frame
 
 def closest(s):
     x,z=s['x'],s['z']
