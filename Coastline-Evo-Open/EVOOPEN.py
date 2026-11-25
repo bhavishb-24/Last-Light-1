@@ -207,55 +207,33 @@ def play():
             print("Check the digits and retry.")
         draw.clear()
     else:
-        tell("WEST QUAY / DUSK",("Mara's station goes silent","at midnight. Her studio is","the WAVE door ahead.","UP starts / DOWN stops.","LEFT and RIGHT turn you."))
+        tell("WEST QUAY / DUSK",("Mara's station goes silent","at midnight. Her studio is","the WAVE door ahead.","Tap or hold UP to move.","DOWN brakes / backs up."))
     tell("STREET CONTROLS",("ENTER: talk, shop, car, park","2nd: map and district pins","ALPHA: journal / checkpoint","CLEAR: journal and quit","DEL: phone and taxi"))
-    buffer=[]
-    next_frame=0
     perspective=True
     previous=None
-    last_view=None
     while True:
-        start=monotonic()
-        if not perspective:
+        if perspective:
+            render(s)
+        else:
             previous=street_map(s,previous)
-        elif start>=next_frame:
-            view=(s['x'],s['z'],s['angle'],s['drive'],s['cash'],s['pin'],
-                  s['msg'] if s['ttl']>0 else '',int(s['clock']//90),s['heat']>0)
-            if view!=last_view or s['heat'] or s['race']>=0:
-                render(s,buffer)
-                last_view=view
-            next_frame=start+0.15
-        k=buffer.pop(0) if buffer else get_key(0)
-        while not k and monotonic()-start<0.075:
-            k=get_key(0)
-        if k:
-            next_frame=0
-        if k in (14,EXIT,31,23,MAP,OK):
-            last_view=None
+        k=keywait((UP,DOWN,LEFT,RIGHT,OK,MAP,EXIT,31,23,14))
         if k==14:
             perspective=not perspective
             previous=None
-            continue
-        if k in (EXIT,31):
-            previous=None
-            buffer=[]
+        elif k in (EXIT,31):
             if not journal(s): return
-            continue
-        if k==23:
             previous=None
-            buffer=[]
+        elif k==23:
             phone(s)
-            continue
-        if k==MAP:
             previous=None
-            buffer=[]
+        elif k==MAP:
             atlas(s)
-            continue
-        if k==OK:
             previous=None
-            buffer=[]
+        elif k==OK:
             interact(s)
-            continue
-        tick(s,k,min(0.22,max(0.035,monotonic()-start)))
+            previous=None
+        else:
+            # Advance once per key so movement stays matched to the picture.
+            tick(s,k,0.22)
 
 play()
