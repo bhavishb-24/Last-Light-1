@@ -94,11 +94,10 @@ def tune():
 
 def phone(s):
     selected=0
-    apps=("Pin next objective","Taxi to district $6","Deposit cash","Withdraw cash")
+    apps=("Pin next objective","Taxi to district $6","Deposit cash","Withdraw cash","Locate parked coupe","Deliver coupe $5")
     while True:
-        lines=["Cash $%d  Bank $%d"%(s['cash'],s['bank'])]
-        lines.extend(("> " if i==selected else "  ")+name for i,name in enumerate(apps))
-        sheet("COASTLINE PHONE",lines,"UP/DOWN  ENTER  CLEAR back")
+        lines=[("> " if i==selected else "  ")+name for i,name in enumerate(apps)]
+        sheet("PHONE $%d / BANK $%d"%(s['cash'],s['bank']),lines,"UP/DOWN  ENTER  CLEAR back")
         k=keywait((UP,DOWN,OK,EXIT))
         if k==EXIT:
             return
@@ -110,6 +109,11 @@ def phone(s):
             notice(s,"Objective pinned" if s['pin']>=0 else "No active objective")
         elif selected==1:
             taxi(s)
+        elif selected==4:
+            n=district(s['cx'],s['cz'])
+            tell("VEHICLE SCANNER",(NAMES[n],"Pink marker on the city map"))
+        elif selected==5:
+            deliver_coupe(s)
         else:
             source,target=('cash','bank') if selected==2 else ('bank','cash')
             amount=min(s[source],999-s[target])
@@ -168,3 +172,23 @@ def street_map(s,previous):
         box(NIGHT,0,171,320,22)
         label(MILK,5,190,NAMES[status[0]]+" $"+str(s['cash'])+" "+status[3])
     return x,y,status
+
+
+def deliver_coupe(s):
+    if s['drive'] or s['race']>=0 or s['heat']:
+        notice(s,"Delivery needs a safe stop")
+        return
+    x,z=s['x'],s['z']
+    for dx,dz in ((2.7,0),(-2.7,0),(0,2.7),(0,-2.7)):
+        u,v=x+dx,z+dz
+        if blocked(u,v,0.85):
+            continue
+        if pay(s,5):
+            s['cx'],s['cz']=u,v
+            s['parkangle']=s['angle']
+            s['speed']=0
+            notice(s,"Coupe delivered nearby")
+        else:
+            notice(s,"Delivery costs $5")
+        return
+    notice(s,"No space to deliver here")
