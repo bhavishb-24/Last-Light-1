@@ -1,5 +1,9 @@
 # Coastline Evo Open World changes
 
+## INPUT V24
+
+- Restores V21 Fast 3D detail while keeping the V23 HUD and GPS.
+
 ## INPUT V23
 
 - The lower 3D HUD remains on screen between moves. Its prompts and navigation update independently. The GPS includes a north-up street strip and a direct destination bearing, not a calculated road route. Alerts take priority over the strip.

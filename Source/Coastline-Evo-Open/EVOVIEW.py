@@ -65,7 +65,7 @@ def face(cam,pts,c):
 def ground(cam,x,z,w,d,c):
     face(cam,((x,0,z),(x+w,0,z),(x+w,0,z+d),(x,0,z+d)),c)
 
-def building(cam,b,detail=False,night=False,plain=False):
+def building(cam,b,detail=False,night=False):
     x,z,w,d,h,c,trim,n=b
     near=detail and abs(cam[0]-x)+abs(cam[1]-z)<24
     l,r=x-w,x+w
@@ -73,7 +73,7 @@ def building(cam,b,detail=False,night=False,plain=False):
     side=l if cam[0]<x else r
     if cam[0]<l or cam[0]>r:
         face(cam,((side,0,a),(side,0,f),(side,h,f),(side,h,a)),c)
-        if not plain and n<0 and h>9 and abs(cam[0]-x)+abs(cam[1]-z)<34:
+        if n<0 and h>9 and abs(cam[0]-x)+abs(cam[1]-z)<34:
             for y in range(3,int(h)-1,3):
                 face(cam,((side,y,a+.6),(side,y,f-.6),
                           (side,y+.5,f-.6),(side,y+.5,a+.6)),BLUE)
@@ -83,8 +83,7 @@ def building(cam,b,detail=False,night=False,plain=False):
             face(cam,((left,lo,front),(right,lo,front),
                       (right,hi,front),(left,hi,front)),col)
         panel(l,r,0,h,c)
-        if not plain:
-            panel(l,r,h-0.42,h,trim)
+        panel(l,r,h-0.42,h,trim)
         if n>=0 and front==a:
             panel(x-0.85,x+0.85,0,2.4,INK)
             panel(l+0.4,x-1.15,0.65,2.2,BLUE)
@@ -99,13 +98,13 @@ def building(cam,b,detail=False,night=False,plain=False):
             if near:
                 face(cam,((l,2.9,a),(r,2.9,a),(r,2.5,a-.8),
                           (l,2.5,a-.8)),trim)
-        elif not plain and n<0 and x>=165:
+        elif n<0 and x>=165:
             panel(x-.55,x+.55,0,1.9,NIGHT)
             panel(l+.5,x-1,1.2,2.3,SUN)
             panel(x+1,r-.5,1.2,2.3,MILK)
             if near:
                 ground(cam,x-.8,front-2 if front==a else front,.8,2,STEEL)
-        elif not plain and n<0:
+        elif n<0:
             for y in range(2,int(h)-1,3):
                 panel(l+.6,r-.6,y,y+.55,SUN if night and y%2 else STEEL)
                 if near:
@@ -144,7 +143,7 @@ def world(s,first):
         box((120,88,128) if night else (230,145,147),0,57,320,11)
     sx=int(160+140*sin(1-s['angle']))
     if front in (0,3): disc(MILK if night else SUN,sx,41,10 if night else 15)
-    for j in range((5 if night else 13) if detail else 0):
+    for j in range((5 if night else 13) if detail else 3):
         px=(j*37-int(s['angle']%TAU*320/TAU))%352-16
         h=4+(j*17)%14
         box(NIGHT if night else VIOLET,px,68-h,12+j%5,h)
@@ -176,13 +175,13 @@ def world(s,first):
     # Short paint dashes mark the closest avenues.
     ix=int((x+16)//32)*32
     iz=int((z+16)//32)*32
-    for off in ((-16,-8,8,16) if detail else (-8,8)):
-        if -8<=iz+off<=74 and 0<=ix<=96:
+    for off in (-16,-8,0,8,16):
+        if -8<=iz+off<=74 and 0<=ix<=96 and off:
             ground(cam,ix-.14,iz+off-.9,.28,2.6,SUN)
-        if -8<=ix+off<=(236 if iz==32 else 108) and 0<=iz<=64:
+        if -8<=ix+off<=(236 if iz==32 else 108) and 0<=iz<=64 and off:
             ground(cam,ix+off-.9,iz-.14,2.6,.28,SUN)
     if 0<=ix<=96 and 0<=iz<=64:
-        for stripe in ((-2,0,2) if detail else (0,)):
+        for stripe in (-2,0,2):
             ground(cam,ix+stripe-.28,iz+3.5,.55,1.25,MILK)
     things=[]
     far=24 if front==2 else (64 if detail else 33)
@@ -197,7 +196,7 @@ def world(s,first):
         bx,bz=door(i)
         add(bx-1.4,bz,1,i,1)
         bx,bz=center(i)
-        if detail or abs(x-bx)+abs(z-bz)<15:
+        if detail or abs(x-bx)+abs(z-bz)<24:
             add(bx-5,bz+4,2,i,2)
     for i in range(3):
         if not (s['records'] & (1<<i)):
@@ -227,8 +226,7 @@ def world(s,first):
     things.sort()
     for d,k,i,bx,bz,u in reversed(things):
         if k==0:
-            b=building_at(i)
-            building(cam,b,detail,night,not detail and b[7]<0 and d>9)
+            building(cam,building_at(i),detail,night)
             continue
         if d<1.5 or (k==4 and s['drive']):
             continue
