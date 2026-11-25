@@ -20,6 +20,8 @@ See the [version notes and rollback instructions](Coastline-Evo-Open/CHANGES.md)
 
 [Download the Python Frame Test](Coastline-Evo-Python-Frame-Test.zip). Extract it and send all four Python files through TI Connect Evo. Run EVFRTEST from the Python App. The test shows three sample frames and reports the slowest load and draw time. It runs separately from Coastline.
 
+[Download the faster frame test](Coastline-Evo-Fast-Frame-Test.zip) to try drawing larger rectangles with the same sample images. Replace all four test files together because the frame format changed.
+
 ## Compact driving edition
 
 If the full Coastline package runs out of memory on your calculator, try the standalone [Coastline-Evo-Lite.zip](Coastline-Evo-Lite.zip). It has a 12-district route map, delivery jobs, and perspective driving. It omits on-foot exploration and the phone systems. Transfer only LASTLITE.py from the ZIP and run LASTLITE in the Python App.
