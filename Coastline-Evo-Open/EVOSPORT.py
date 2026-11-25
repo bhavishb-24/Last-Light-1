@@ -114,3 +114,81 @@ def golf(s):
             power=max(0,min(6,power+(1 if k==RIGHT else -1)))
     earn(s,15)
     tell("THREE HOLES CLEARED",("Course prize $15",))
+
+
+def intro():
+    skyline(7)
+    box(NIGHT,0,84,320,126)
+    label(SUN,14,114,"LAST LIGHT")
+    label(MINT,14,138,"COASTLINE")
+    label(MILK,14,196,"ENTER skip")
+    box(STEEL,14,153,292,9)
+    start=monotonic()
+    shown=-1
+    while True:
+        key=get_key(0)
+        elapsed=monotonic()-start
+        if key in (OK,EXIT) or elapsed>=20:
+            return
+        step=int(elapsed)
+        if step!=shown:
+            box(MINT,15,154,step*14,7)
+            shown=step
+
+def front_menu():
+    from EVOVIEW import person
+    intro()
+    settings=[False,1,True]
+    items=("New story","Load save","Settings","Quit")
+    selected=0
+    while True:
+        skyline(7)
+        box((51,91,121),0,84,320,53)
+        for x in (149,194,242,287):
+            box((123,146,174),x,100+x%9,23,2)
+        box(VIOLET,0,133,320,77)
+        box(STEEL,132,138,188,3)
+        for x in (147,219,291):
+            box(STEEL,x,138,3,59)
+        person(193,190,121,MINT,0,False)
+        person(258,190,133,BLUE,0,False)
+        box(INK,0,0,133,210)
+        label(SUN,8,27,"LAST LIGHT")
+        label(MINT,8,48,"COASTLINE")
+        for i,item in enumerate(items):
+            y=72+24*i
+            if i==selected:
+                box(PINK,4,y-14,3,15)
+            label(MILK if i==selected else STEEL,10,y,item)
+        label(MINT,8,181,"INPUT V13")
+        label(MILK,8,202,"ENTER select")
+        key=keywait((UP,DOWN,OK,MAP,EXIT))
+        if key==EXIT or (key==OK and selected==3):
+            return EXIT,settings
+        if key==MAP or (key==OK and selected==1):
+            return MAP,settings
+        if key==OK:
+            if selected==0:
+                return OK,settings
+            menu_settings(settings)
+        else:
+            selected=(selected+(1 if key==DOWN else -1))%4
+
+def menu_settings(settings):
+    row=0
+    while True:
+        labels=("Graphics  "+("Full" if settings[0] else "Fast"),
+                "Turning   "+("Fine","Normal","Sharp")[settings[1]],
+                "View      "+("3D" if settings[2] else "Top-down"))
+        lines=tuple(("> " if i==row else "  ")+item
+                    for i,item in enumerate(labels))
+        sheet("SETTINGS",lines,"ARROWS change / CLEAR back")
+        key=keywait((UP,DOWN,LEFT,RIGHT,OK,EXIT))
+        if key==EXIT:
+            return
+        if key in (UP,DOWN):
+            row=(row+(1 if key==DOWN else -1))%3
+        elif row==1:
+            settings[1]=(settings[1]+(-1 if key==LEFT else 1))%3
+        else:
+            settings[row]=not settings[row]

@@ -1,5 +1,11 @@
 # Coastline Evo Open World changes
 
+## INPUT V13
+
+- EVOOPEN starts with an original animated Coastline intro capped at 20 seconds. Press ENTER to skip.
+- The illustrated title menu offers New story, Load save, Settings and Quit. Settings choose Fast or Full graphics, Fine, Normal or Sharp turning, and a 3D or top-down starting view. These options apply to the game you start or load.
+- From V12, replace EVOOPEN.py and EVOSPORT.py. The ZIP contains five Python files. Checkpoint codes still work. [Roll back to V12](https://github.com/bhavishb-24/Last-Light/raw/9062894/Coastline-Evo-Open.zip).
+
 ## INPUT V12
 
 - The 3D HUD draws a GPS arrow and distance to your pin or active objective. Ramp approaches have destination signs.

@@ -219,14 +219,8 @@ def journal(s):
 
 
 def play():
-    draw.clear()
-    skyline(7)
-    box(INK,0,84,320,126)
-    label(SUN,12,110,"LAST LIGHT / INPUT V12")
-    label(MILK,12,139,"ENTER new story")
-    label(MINT,12,164,"2nd load checkpoint")
-    label(MILK,12,196,"CLEAR quit")
-    k=keywait((OK,MAP,EXIT))
+    from EVOSPORT import front_menu
+    k,settings=front_menu()
     if k==EXIT: return
     s=fresh()
     if k==MAP:
@@ -241,7 +235,7 @@ def play():
     else:
         tell("WEST QUAY / DUSK",("Mara's station goes silent","at midnight. Her studio is","the WAVE door ahead.","Tap or hold UP to move.","DOWN brakes / backs up."))
     tell("STREET CONTROLS",("ENTER: talk, shop, car, park","2nd: map and district pins","ALPHA: journal / checkpoint","CLEAR: journal and quit","DEL: phone and taxi"))
-    perspective=True
+    s["detail"],s["turn"],perspective=settings
     previous=None
     controls=(UP,DOWN,LEFT,RIGHT,OK,MAP,EXIT,31,23,14)
     while get_key(0)==OK:
