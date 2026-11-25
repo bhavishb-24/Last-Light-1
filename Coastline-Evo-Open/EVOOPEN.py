@@ -125,8 +125,9 @@ def tick(s,k,dt):
         limit=19
     if not driving and s.get("fit",0)>s['clock']:
         limit+=2
-    if k==LEFT: s['angle']=(s['angle']-0.39)%TAU
-    if k==RIGHT: s['angle']=(s['angle']+0.39)%TAU
+    if k in (LEFT,RIGHT):
+        turn=(0.20,0.39,0.58)[s.get('turn',1)]
+        s['angle']=(s['angle']+(turn if k==RIGHT else -turn))%TAU
     if k==UP: s['speed']=min(limit,max(0,s['speed'])+(3 if driving else limit))
     if k==DOWN:
         s['speed']=0 if s['speed']>0 else -limit*0.4
@@ -204,19 +205,24 @@ def journal(s):
     count=sum((s['records']>>i)&1 for i in range(3))
     while True:
         mode="Full" if s['detail'] else "Fast"
+        turn=("Fine","Normal","Sharp")[s.get("turn",1)]
         sheet(title,(TASK[s['stage']],STORY_HELP[s['stage']],"Parcel: "+job,"Records "+str(count)+"/3 | 2nd "+mode,
-                     "Checkpoint: "+passcode(s)),
+                     "Checkpoint: "+passcode(s),"RIGHT turning: "+turn),
                      "ENTER back / CLEAR quit")
-        k=keywait((OK,EXIT,MAP))
-        if k!=MAP: return k!=EXIT
-        s['detail']=not s['detail']
+        k=keywait((OK,EXIT,MAP,RIGHT))
+        if k==RIGHT:
+            s['turn']=(s.get('turn',1)+1)%3
+        elif k==MAP:
+            s['detail']=not s['detail']
+        else:
+            return k!=EXIT
 
 
 def play():
     draw.clear()
     skyline(7)
     box(INK,0,84,320,126)
-    label(SUN,12,110,"LAST LIGHT / INPUT V11")
+    label(SUN,12,110,"LAST LIGHT / INPUT V12")
     label(MILK,12,139,"ENTER new story")
     label(MINT,12,164,"2nd load checkpoint")
     label(MILK,12,196,"CLEAR quit")

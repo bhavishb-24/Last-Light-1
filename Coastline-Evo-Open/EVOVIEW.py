@@ -175,6 +175,9 @@ def render(s):
     if 0<=ix<=96 and 0<=iz<=64:
         add(ix+4,iz+4,9,0,1)
         add(ix-4,iz-4,9,1,1)
+    if x>78:
+        for i,ramp in enumerate(RAMPS):
+            add(ramp[0]-4,ramp[1]+3,10,i,2)
     if s['heat']>0: add(s['px'],s['pz'],8,0,2)
     add(s['cx'],s['cz'],4,0,2)
     for i,p in enumerate(traffic(s['clock'])):
@@ -192,7 +195,14 @@ def render(s):
         px=int(160+121*u/d)
         py=int(68+121*(cam[4]-road_height(bx,bz))/d)
         h=max(5,int(245/d))
-        if k==9:
+        if k==10:
+            title=("NORTHGATE","EAST DOCKS","SOUTHBANK")[i]
+            if 60<px<260 and 34<py-h<166:
+                box(STEEL,px-1,py-h,2,h)
+                box((25,89,71),px-56,py-h-17,112,18)
+                label(MILK,px-52,py-h-2,title)
+                arrow(px+46,py-h-8,"UP",MILK)
+        elif k==9:
             signal(px,py,h,(int(s['clock']//8)+i)%3)
         elif k==1:
             person(px,py,h,TRIM[i%4],0,False)
@@ -228,12 +238,22 @@ def render(s):
     label(MILK,211,19,WEATHER[front])
     label(SUN,273,19,'$'+str(s['cash']))
     box(INK,0,167,320,43)
-    label(SUN,5,186,gps(s))
+    route=gps(s)
+    parts=route.split()
+    if len(parts)>2:
+        arrow(216,178,parts[-2],SUN)
+        route=" ".join(parts[:-2])[:17]+" "+parts[-1]
+    label(SUN,5,186,route)
     if s['heat']>0: label(PINK,228,186,'ALERT '+str(int(s['heat'])))
     k,i=closest(s)
     hint="2nd map / ALPHA journal"
     if s['drive']: hint="ENTER park / arrows drive"
-    elif k=='door': hint="ENTER "+VENUES[i]
+    elif k=='door':
+        hint="ENTER "+VENUES[i]
+        if i==7 and s['stage']!=1: hint="ENTER fish at Sun Pier"
+        if i==0 and s['stage']>0: hint="ENTER safehouse / rest"
+        if i==9 and s['stage']!=4: hint="ENTER play pool"
+        if i==10: hint="ENTER gym / mini golf"
     elif k=='disc': hint="ENTER collect record"
     elif k=='local': hint='ENTER talk to local'
     elif k=='car': hint="ENTER drive coupe"
@@ -259,3 +279,13 @@ def signal(x,y,h,phase):
     box(STEEL,x-1,y-h,2,h)
     box(INK,x-width,y-h-3*lamp,2*width,6*lamp)
     box((RED,SUN,MINT)[phase],x-lamp,y-h+(phase*2-3)*lamp,2*lamp,lamp)
+
+
+def arrow(x,y,direction,c):
+    if direction=="HERE":
+        disc(c,x,y,3)
+        return
+    dx,dy=(1,0) if direction=="R" else ((-1,0) if direction=="L" else
+          ((0,1) if direction=="TURN" else (0,-1)))
+    poly(c,[x+6*dx,x-4*dx-4*dy,x-4*dx+4*dy],
+           [y+6*dy,y-4*dy+4*dx,y-4*dy-4*dx])

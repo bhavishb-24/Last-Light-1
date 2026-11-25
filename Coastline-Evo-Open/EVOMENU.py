@@ -109,15 +109,16 @@ def tune():
 
 def phone(s):
     selected=0
-    apps=("Pin next objective","Taxi to district $6","Deposit cash","Withdraw cash","Locate parked coupe","Deliver coupe $5")
+    apps=("GPS","Taxi","Deposit","Withdraw","Scanner","Delivery")
+    hints=("Pin next objective","Ride to a district $6","Move cash to savings",
+           "Move savings to cash","Locate parked coupe","Bring coupe here $5")
     while True:
-        lines=[("> " if i==selected else "  ")+name for i,name in enumerate(apps)]
-        sheet("PHONE $%d / BANK $%d"%(s['cash'],s['bank']),lines,"UP/DOWN  ENTER  CLEAR back")
-        k=keywait((UP,DOWN,OK,EXIT))
+        phone_screen(s,apps,hints,selected)
+        k=keywait((UP,DOWN,LEFT,RIGHT,OK,EXIT))
         if k==EXIT:
             return
-        if k in (UP,DOWN):
-            selected=(selected+(1 if k==DOWN else -1))%len(apps)
+        if k!=OK:
+            selected=(selected+{UP:-3,DOWN:3,LEFT:-1,RIGHT:1}[k])%6
             continue
         if selected==0:
             s['pin']=goal(s)
@@ -248,3 +249,29 @@ def safehouse(s):
         tell("SAFEHOUSE CHECKPOINT",(passcode(s),"Load with 2nd at the title."))
     elif key==OK:
         radio_bulletin(s)
+
+
+def phone_screen(s,apps,hints,selected):
+    box(INK,0,0,320,210)
+    box(STEEL,36,3,248,204)
+    box(NIGHT,40,7,240,196)
+    label(MINT,48,28,"COASTLINE")
+    label(MILK,48,46,"Cash $%d  Bank $%d"%(s['cash'],s['bank']))
+    for i,name in enumerate(apps):
+        x,y=48+77*(i%3),54+54*(i//3)
+        c=(MINT,GOLD,BLUE,PINK,STEEL,SUN)[i]
+        box(MILK if i==selected else ROAD,x,y,70,49)
+        box(c,x+24,y+3,22,22)
+        if i in (0,2,3):
+            arrow(x+35,y+14,("UP","","TURN","UP")[i],INK)
+        elif i==4:
+            disc(INK,x+35,y+14,6)
+            disc(c,x+35,y+14,3)
+        else:
+            box(INK,x+28,y+12,14,7)
+            box(INK,x+31,y+8,8,5)
+            disc(INK,x+30,y+20,2)
+            disc(INK,x+40,y+20,2)
+        label(INK if i==selected else MILK,x+4,y+43,name)
+    label(MINT,48,179,hints[selected])
+    label(MILK,48,198,"ENTER open / CLEAR back")

@@ -1,5 +1,13 @@
 # Coastline Evo Open World changes
 
+## INPUT V12
+
+- The 3D HUD draws a GPS arrow and distance to your pin or active objective. Ramp approaches have destination signs.
+- Press RIGHT in the ALPHA journal to switch between Fine, Normal and Sharp turning. Normal is the default, and the setting lasts for the session.
+- Nearby prompts name activities such as fishing, the safehouse and pool.
+- DEL opens a six-tile phone with icons for GPS, taxi, deposit, withdraw, scanner and delivery. Use the arrows to select a tile and ENTER to open it.
+- From V11, replace EVOOPEN.py, EVOVIEW.py and EVOMENU.py. The ZIP still contains five Python files. [Roll back to V11](https://github.com/bhavishb-24/Last-Light/raw/ec6185b/Coastline-Evo-Open.zip).
+
 ## INPUT V11
 
 - The 3D renderer clips polygons without a temporary vertex list and reuses coordinates already projected during visibility checks. Fast and Full retain their existing artwork and key-triggered redraw behavior.
