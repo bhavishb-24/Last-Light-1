@@ -2,6 +2,10 @@
 
 An original open-world action-adventure game for the TI-84 Evo. Explore a compact South Florida-inspired city, follow Lena and Sol through a complete story, and take side trips by car, skiff, floatplane, jet ski, or airboat.
 
+## Evo Open World edition
+
+This smaller calculator build includes walking, driving, shops, a city map, and a story. Unzip [Coastline-Evo-Open.zip](Coastline-Evo-Open.zip), send all four Python files through TI Connect Evo, then run EVOOPEN from PRGM → Python App.
+
 ## Compact driving edition
 
 If the full Coastline package runs out of memory on your calculator, try the standalone [Coastline-Evo-Lite.zip](Coastline-Evo-Lite.zip). It has a 12-district route map, delivery jobs, and perspective driving. It omits on-foot exploration and the phone systems. Transfer only LASTLITE.py from the ZIP and run LASTLITE in the Python App.
