@@ -90,3 +90,50 @@ def tune():
         if k==RIGHT: position=min(8,position+1)
         if k==OK and position==target: locks+=1
     return True
+
+
+def phone(s):
+    selected=0
+    apps=("Pin next objective","Taxi to district $6","Deposit cash","Withdraw cash")
+    while True:
+        lines=["Cash $%d  Bank $%d"%(s['cash'],s['bank'])]
+        lines.extend(("> " if i==selected else "  ")+name for i,name in enumerate(apps))
+        sheet("COASTLINE PHONE",lines,"UP/DOWN  ENTER  CLEAR back")
+        k=keywait((UP,DOWN,OK,EXIT))
+        if k==EXIT:
+            return
+        if k in (UP,DOWN):
+            selected=(selected+(1 if k==DOWN else -1))%len(apps)
+            continue
+        if selected==0:
+            s['pin']=goal(s)
+            notice(s,"Objective pinned" if s['pin']>=0 else "No active objective")
+        elif selected==1:
+            taxi(s)
+        else:
+            source,target=('cash','bank') if selected==2 else ('bank','cash')
+            amount=min(s[source],999-s[target])
+            s[source]-=amount
+            s[target]+=amount
+            notice(s,"Transferred $"+str(amount))
+        return
+
+def taxi(s):
+    if s['race']>=0 or s['heat'] or s['drive']:
+        notice(s,"Taxi needs a safe stop on foot")
+        return
+    n=district(s['x'],s['z'])
+    while True:
+        sheet("COASTLINE TAXI",(NAMES[n],"Fare $6"),"UP/DOWN  ENTER  CLEAR back")
+        k=keywait((UP,DOWN,OK,EXIT))
+        if k==EXIT:
+            return
+        if k==OK:
+            break
+        n=(n+(1 if k==DOWN else -1))%len(NAMES)
+    if pay(s,6):
+        s['x'],s['z']=center(n)
+        s['speed']=0
+        notice(s,"Arrived at "+NAMES[n])
+    else:
+        notice(s,"Taxi fare is $6")

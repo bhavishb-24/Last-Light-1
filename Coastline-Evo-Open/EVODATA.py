@@ -173,7 +173,7 @@ def blocked(x,z,r):
 
 def fresh():
     return dict(x=7.0,z=65.0,angle=0.0,cx=3.0,cz=64.0,
-                pin=-1,detail=True,drive=False,speed=0,stage=0,cash=25,coat=0,paint=0,
+                pin=-1,detail=True,drive=False,speed=0,stage=0,cash=25,bank=0,coat=0,paint=0,
                 shoes=0,records=0,job=0,race=-1,timer=0.0,clock=0.0,
                 fine=0.0,heat=0.0,px=0.0,pz=0.0,parkangle=0.0,stride=0.0,msg="",ttl=0)
 
@@ -195,9 +195,19 @@ def passcode(s):
     v=district(s['x'],s['z'])
     for base,key in ((7,'stage'),(1000,'cash'),(3,'coat'),(3,'paint'),(2,'shoes'),(8,'records'),(13,'job')):
         v=v*base+s[key]
-    return str(v)+str(v%7)
+    code=str(v)+str(v%7)
+    bank=s['bank']
+    return code+(".%03d%d"%(bank,bank%7) if bank else "")
 
 def restore(code):
+    bank=0
+    if "." in code:
+        code,_,saved=code.partition(".")
+        if len(saved)!=4 or not saved.isdigit():
+            return None
+        bank=int(saved[:3])
+        if bank%7!=int(saved[3]):
+            return None
     if not code.isdigit() or not 2<=len(code)<=11:
         return None
     v=int(code[:-1])
@@ -209,6 +219,7 @@ def restore(code):
         v//=base
     if v>=12:
         return None
+    s['bank']=bank
     x,z=center(v)
     s['x'],s['z']=x+7,z+1
     s['cx'],s['cz']=x+3,z

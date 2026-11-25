@@ -204,7 +204,7 @@ def play():
         draw.clear()
     else:
         tell("WEST QUAY / DUSK",("Mara's station goes silent","at midnight. Her studio is","the WAVE door ahead.","UP starts / DOWN stops.","LEFT and RIGHT turn you."))
-    tell("STREET CONTROLS",("ENTER: talk, shop, car, park","2nd: map and district pins","ALPHA: journal / checkpoint","CLEAR: journal and quit","Pink map dot: parked coupe."))
+    tell("STREET CONTROLS",("ENTER: talk, shop, car, park","2nd: map and district pins","ALPHA: journal / checkpoint","CLEAR: journal and quit","DEL: phone and taxi"))
     buffer=[]
     next_frame=0
     while True:
@@ -221,6 +221,10 @@ def play():
         if k in (EXIT,31):
             buffer=[]
             if not journal(s): return
+            continue
+        if k==23:
+            buffer=[]
+            phone(s)
             continue
         if k==MAP:
             buffer=[]
