@@ -14,7 +14,7 @@ See the [version notes and rollback instructions](Coastline-Evo-Open/CHANGES.md)
 
 ### Native image playback test
 
-[Download the 5 FPS test ZIP](Coastline-Evo-5FPS-Test.zip). Extract it and transfer CLIPTEST.py and all ten .8xv2 pictures with TI Connect Evo. Run CLIPTEST in the Python App. The test displays the slowest frame draw, late frame count and total elapsed time. It runs separately from the game.
+[Download the 5 FPS test ZIP](Coastline-Evo-5FPS-Test.zip). Extract it and send CLIP00.8xv2 by itself using WebTILP first. If accepted, send the other nine pictures and replace CLIPTEST.py. The revised test uses 160 × 90 RLE pictures. Run CLIPTEST in the Python App. The test displays the slowest frame draw, late frame count and total elapsed time. It runs separately from the game.
 
 ## Compact driving edition
 
