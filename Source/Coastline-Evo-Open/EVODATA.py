@@ -377,12 +377,14 @@ def tell(title,lines,speaker=None):
                      (ROAD,(224,167,120),BLUE),
                      (VIOLET,(168,106,88),MINT),
                      (NIGHT,(232,176,143),VIOLET),
-                     (INK,(121,79,67),GOLD))[speaker]
+                     (INK,(121,79,67),GOLD),
+                     (VIOLET,(185,124,102),PINK),
+                     (ROAD,(207,150,111),MINT))[speaker]
     box(NIGHT,257,139,55,43)
     box(shirt,266,172,37,10)
     box(skin,274,146,21,28)
     box(hair,272,143,25,8)
-    if speaker in (0,2):
+    if speaker in (0,2,5):
         box(hair,270,148,5,20)
     box(INK,278,156,3,2)
     box(INK,288,156,3,2)

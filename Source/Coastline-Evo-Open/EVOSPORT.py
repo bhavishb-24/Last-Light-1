@@ -266,7 +266,7 @@ def front_menu(show_intro=True):
             if i==selected:
                 box(PINK,4,y-14,3,15)
             label(MILK if i==selected else STEEL,10,y,item)
-        label(MINT,8,181,"INPUT V27")
+        label(MINT,8,181,"INPUT V28")
         label(MILK,8,202,"ENTER select")
         key=keywait((UP,DOWN,OK,MAP,EXIT))
         if key==EXIT or (key==OK and selected==3):
@@ -319,3 +319,28 @@ def west_quay_opening():
     label(MILK,9,175,"Find WAVE. Go to the counter.")
     label(SUN,9,200,"ENTER continue")
     keywait((OK,EXIT))
+
+def story_shot(title,speaker):
+    box(NIGHT,0,0,320,210)
+    box(VIOLET,0,0,320,70)
+    box((185,101,127),0,70,320,43)
+    disc(SUN,236,76,22)
+    box(STEEL,0,113,320,60)
+    if speaker==1:
+        box(ROAD,24,111,188,17)
+        for x in (32,93,154,197):
+            box(INK,x,128,6,30)
+    elif title=="WAVE STUDIO":
+        box(ROAD,35,66,155,83)
+        box(PINK,31,63,163,5)
+        box(MINT,50,99,34,21)
+        box(INK,107,99,40,50)
+        label(SUN,84,92,"WAVE")
+    else:
+        poly(INK,[55,87,72],[153,153,37])
+        box(PINK,70,39,5,5)
+        box(ROAD,43,149,60,8)
+    box(INK,0,166,320,44)
+    label(MINT,9,184,title)
+    label(MILK,9,204,"ENTER continue")
+    keywait((OK,))

@@ -1,5 +1,9 @@
 # Coastline Evo Open World changes
 
+## INPUT V28
+
+- Four story moments now have illustrated location shots and back-and-forth dialogue with animated speaker portraits. Press ENTER to advance.
+
 ## INPUT V27
 
 - New Story opens with an illustrated West Quay sunset and a picture of the WAVE studio before the controls screen.

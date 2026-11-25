@@ -21,6 +21,17 @@ from EVOVIEW import render,traffic,hud
 gc.collect()
 from EVODATA import *
 gc.collect()
+def conversation(s,title,speaker,reply,lines):
+    from EVOSPORT import story_shot
+    story_shot(title,speaker)
+    while get_key(0)==OK:
+        pass
+    who=s.get('who',0)
+    tell(("LENA","SOL")[who],(reply,),5+who)
+    while get_key(0)==OK:
+        pass
+    tell(("MARA","IVO")[speaker],lines,speaker)
+
 def venue(s,n):
     from EVOMENU import shop,tune,safehouse
     t=s['stage']
@@ -30,16 +41,16 @@ def venue(s,n):
         tell("PARCEL SIGNED  +$45",("The night clerk signs for it.","Dispatch has more work."))
         return
     if n==0 and t==0:
-        tell("MARA / DEAD AIR",("They sold our frequency.","Ivo has a recording of it.","Find the PIER sign at Sun Pier.","Park and use the PIER counter."),0)
+        conversation(s,"WAVE STUDIO",0,"Why is the station going dark?",("They sold our frequency.","Ivo has a recording of it.","Find the PIER sign at Sun Pier.","Park and use the PIER counter."))
         s['stage']=1
     elif n==7 and t==1:
-        tell("IVO / THE PIER TAPE",("Mara's brother signed the deal.","Take $30 for a signal valve.","Go to PARTS in Glasshouse.","Buy the valve for $20."),1)
+        conversation(s,"SUN PIER",1,"Mara said you kept a copy.",("Mara's brother signed the deal.","Take $30 for a signal valve.","Go to PARTS in Glasshouse.","Buy the valve for $20."))
         s['stage']=2
         earn(s,30)
     elif n==2 and t==3:
         if tune():
             s['stage']=4
-            tell("MARA / OPEN CHANNEL",("That's my brother's voice.","PIXEL airs the original tape.","VELVET disguises his voice.","Visit one door to choose."),0)
+            conversation(s,"FM TOWER",0,"Is that who I think it is?",("That's my brother's voice.","PIXEL airs the original tape.","VELVET disguises his voice.","Visit one door to choose."))
     elif t==4 and n in (6,9):
         public=n==6
         s['stage']=5 if public else 6
@@ -124,8 +135,8 @@ def follow_wire(s,n):
                               "Use the "+SIGNS[next_stop]+" counter."),0)
         notice(s,"Evidence filed / $8")
     else:
-        tell("THE RELIEF TAPE / COMPLETE",("Mara airs the evidence in full.",
-             "The stolen relief fund is traced.","Campaign complete / Bonus $150."),0)
+        conversation(s,"BEACON POINT",0,"Did the whole city hear it?",("Every word. The tape is public.",
+             "The stolen relief fund is traced.","Campaign complete / Bonus $150."))
         notice(s,"Campaign complete")
 
 def interact(s):
