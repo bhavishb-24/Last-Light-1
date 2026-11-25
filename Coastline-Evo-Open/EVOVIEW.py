@@ -54,10 +54,10 @@ def face(cam,pts,c):
         if (a[2]>=1)!=(b[2]>=1):
             f=(1-a[2])/(b[2]-a[2])
             xs.append(int(160+121*(a[0]+f*(b[0]-a[0]))))
-            ys.append(int(68+121*(3.4-a[1]-f*(b[1]-a[1]))))
+            ys.append(int(68+121*(cam[4]-a[1]-f*(b[1]-a[1]))))
         if b[2]>=1:
             xs.append(int(160+121*b[0]/b[2]))
-            ys.append(int(68+121*(3.4-b[1])/b[2]))
+            ys.append(int(68+121*(cam[4]-b[1])/b[2]))
         a=b
     if len(xs)>=3 and max(xs)>=0 and min(xs)<320 and max(ys)>=0 and min(ys)<188:
         poly(c,xs,ys)
@@ -86,20 +86,20 @@ def building(cam,b):
             u,dep=uv(cam,x,a)
             if 4<dep<21:
                 sx=int(160+121*u/dep)-5*len(SIGNS[n])
-                sy=int(68+121*(3.4-h+1.2)/dep)
+                sy=int(68+121*(cam[4]-h+1.2)/dep)
                 if 0<=sx<=320-10*len(SIGNS[n]) and 18<sy<172:
                     box(INK,sx-2,sy-17,10*len(SIGNS[n])+4,16)
                     label(MILK,sx,sy,SIGNS[n])
         elif n<0:
             for y in range(2,int(h)-1,3):
                 panel(l+0.6,r-0.6,y,y+0.45,STEEL)
-    if h<3.4:
+    if h<cam[4]:
         face(cam,((l,h,a),(r,h,a),(r,h,f),(l,h,f)),c)
 
 def render(s):
     x,z=s['x'],s['z']
     f,c=sin(s['angle']),cos(s['angle'])
-    cam=(x-6*f,z-6*c,f,c)
+    cam=(x-6*f,z-6*c,f,c,3.4+road_height(x,z))
     detail=s['detail']
     night=int(s['clock']//90)%2
     front=weather(s)
@@ -137,13 +137,7 @@ def render(s):
         if abs(z-a)<48:
             ground(cam,-10,a-3,186 if i==1 else 122,6,ASPHALT)
     if x>80:
-        ground(cam,138,-8,12,84,WALK)
-        ground(cam,139,-8,10,84,ASPHALT)
-        ground(cam,143.85,-8,.3,84,SUN)
-        for a,b,u,v in RAMPS:
-            if abs(z-b)<48:
-                face(cam,((a,0,b-3),(u,0,v-3),(u,0,v+3),(a,0,b+3)),ASPHALT)
-                face(cam,((a,0,b),(u,0,v),(u,0,v+.25),(a,0,b+.25)),SUN)
+        overpass(cam,z)
     # Short paint dashes mark the closest avenues.
     ix=int((x+16)//32)*32
     iz=int((z+16)//32)*32
@@ -152,6 +146,9 @@ def render(s):
             ground(cam,ix,iz+off,0.12,1.8,SUN)
         if -8<=ix+off<=105 and 0<=iz<=64:
             ground(cam,ix+off,iz,1.8,0.12,SUN)
+    if 0<=ix<=96 and 0<=iz<=64:
+        for stripe in (-2,0,2):
+            ground(cam,ix+stripe-.28,iz+3.5,.55,1.25,MILK)
     things=[]
     far=24 if front==2 else (64 if detail else 33)
     def add(bx,bz,kind,i,r):
@@ -176,6 +173,9 @@ def render(s):
         bx,bz=center((1,5,10)[j])
         bx+=6*sin(s['clock']*0.5+j)
         add(bx,bz-4,7,j,1)
+    if 0<=ix<=96 and 0<=iz<=64:
+        add(ix+4,iz+4,9,0,1)
+        add(ix-4,iz-4,9,1,1)
     if s['heat']>0: add(s['px'],s['pz'],8,0,2)
     add(s['cx'],s['cz'],4,0,2)
     for i,p in enumerate(traffic(s['clock'])):
@@ -193,9 +193,11 @@ def render(s):
             continue
         u,d=uv(cam,bx,bz)
         px=int(160+121*u/d)
-        py=int(68+411/d)
+        py=int(68+121*(cam[4]-road_height(bx,bz))/d)
         h=max(5,int(245/d))
-        if k==1:
+        if k==9:
+            signal(px,py,h,(int(s['clock']//8)+i)%3)
+        elif k==1:
             person(px,py,h,TRIM[i%4],0,False)
             if i==goal(s) or (s['stage']==4 and i==9):
                 disc(GOLD,px,py-h-5,3)
@@ -239,3 +241,21 @@ def render(s):
     elif k=='local': hint='ENTER talk to local'
     elif k=='car': hint="ENTER drive coupe"
     label(MILK,5,207,s['msg'] if s['ttl']>0 else hint)
+
+
+def overpass(cam,z):
+    face(cam,((139,0,-8),(139,0,76),(139,4,76),(139,4,-8)),STEEL)
+    face(cam,((139,4,-8),(149,4,-8),(149,4,76),(139,4,76)),ASPHALT)
+    face(cam,((143.85,4.03,-8),(144.15,4.03,-8),
+              (144.15,4.03,76),(143.85,4.03,76)),SUN)
+    for a,b,u,v in RAMPS:
+        if abs(z-b)<48:
+            face(cam,((a,0,b-3),(u,4,v-3),(u,4,v+3),(a,0,b+3)),ASPHALT)
+            face(cam,((a,.03,b),(u,4.03,v),(u,4.03,v+.28),(a,.03,b+.28)),SUN)
+
+def signal(x,y,h,phase):
+    width=max(2,h//4)
+    lamp=max(1,h//12)
+    box(STEEL,x-1,y-h,2,h)
+    box(INK,x-width,y-h-3*lamp,2*width,6*lamp)
+    box((RED,SUN,MINT)[phase],x-lamp,y-h+(phase*2-3)*lamp,2*lamp,lamp)

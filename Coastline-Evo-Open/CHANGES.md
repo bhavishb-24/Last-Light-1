@@ -1,5 +1,15 @@
 # Coastline Evo Open World changes
 
+## INPUT V9
+
+- Coast Expressway now has a raised deck. The three ramps climb from street level to four game units, and the 3D camera follows the road height. The road surface has a single level at each location.
+- Added street signal poles that cycle red, amber and green, and painted crosswalks near city intersections. The lights are scenery.
+- Replace EVODATA.py, EVOVIEW.py and EVOOPEN.py when upgrading from V8. The five-file ZIP and checkpoint format are retained.
+
+### Roll back to INPUT V8
+
+Download the [V8 ZIP](https://github.com/bhavishb-24/Last-Light/raw/9b209cb/Coastline-Evo-Open.zip), replace all five Python files, and check for LAST LIGHT / INPUT V8.
+
 ## INPUT V8
 
 - Four districts extend the city east: Northgate, East Docks, Southbank and Breakwater.

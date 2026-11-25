@@ -141,10 +141,20 @@ WALK=(158,142,150)
 TILE=(95,123,128)
 TAU=6.2831853
 
-RAMPS=((112,64,144,51),(112,32,144,32),(112,0,144,-6))
+RAMPS=((112,64,139,51),(112,32,139,32),(112,0,139,-6))
 
 def highway(x,z):
-    return abs(x-144)<5 and -8<z<76
+    return abs(x-144)<=5 and -8<z<76
+
+def road_height(x,z):
+    if highway(x,z):
+        return 4
+    if 112<x<139:
+        t=(x-112)/27
+        for a,b,u,v in RAMPS:
+            if abs(z-(b+(v-b)*t))<3:
+                return 4*t
+    return 0
 
 def center(n):
     if n>=12:
