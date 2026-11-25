@@ -1,5 +1,9 @@
+import gc
+gc.collect()
 from EVODATA import *
+gc.collect()
 from EVOVIEW import *
+gc.collect()
 from EVOMENU import *
 def venue(s,n):
     t=s['stage']
