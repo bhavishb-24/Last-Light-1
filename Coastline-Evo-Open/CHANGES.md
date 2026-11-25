@@ -1,5 +1,10 @@
 # Coastline Evo Open World changes
 
+## V17 fullscreen frame clarity update
+
+- Rebuilt only EVFS010.py, EVFS012.py, EVFS014.py and EVFS016.py from clearer moments in the same sequence. The four frames have capped drawing work and the entire pack uses 3,973 drawing rectangles. The previous fast pack used 3,373, and the first fullscreen pack used 24,313.
+- Replace only those four files. [Previous fast pack](https://github.com/bhavishb-24/Last-Light/raw/7a673da/Coastline-Evo-Fullscreen-Intro.zip).
+
 ## V17 fullscreen pack diagnostics
 
 - Replace EVFSPLAY.py from the current fullscreen ZIP. The player ignores ENTER for the first 0.9 seconds and displays the frame name and exception if loading or drawing fails. Acknowledge an error with ENTER to continue to the title. Successful playback still has no overlay.
