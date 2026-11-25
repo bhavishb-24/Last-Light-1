@@ -2,9 +2,9 @@
 
 An open-world game for the **TI-84 Evo**. Explore 20 districts, drive in first person, enter shops, and follow the story from downtown to the countryside.
 
-**[Download the game · V20](https://github.com/bhavishb-24/Last-Light/raw/main/Coastline-Evo-Open.zip)**
+**[Download the game · V20](https://github.com/bhavishb-24/Last-Light/raw/main/01-REQUIRED-Last-Light-Evo-Game.zip)**
 
-[Download the optional loading screen](https://github.com/bhavishb-24/Last-Light/raw/main/Coastline-Evo-Fullscreen-Intro.zip)
+[Download the optional loading screen](https://github.com/bhavishb-24/Last-Light/raw/main/02-OPTIONAL-Animated-Loading-Screen.zip)
 
 ## Install or update
 
@@ -25,12 +25,12 @@ Already have the optional loading screen? Keep those files when updating the gam
 | DEL | Open the phone |
 | TRACE | Switch camera views |
 
-[Update notes and rollback downloads](Coastline-Evo-Open/CHANGES.md) · [Game source](Coastline-Evo-Open/)
+[Update notes and rollback downloads](Source/Coastline-Evo-Open/CHANGES.md) · [Game source](Source/Coastline-Evo-Open/)
 
 <details>
 <summary>Older editions</summary>
 
-- [Lite driving edition](Coastline-Evo-Lite.zip). Transfer and run `LASTLITE.py`.
-- [Original full edition](Coastline-Evo.zip) and [play guide](Coastline/PLAY.md). This edition ran out of working memory on the Evo used for this project.
+- [Lite driving edition](Legacy/Coastline-Evo-Lite.zip). Transfer and run `LASTLITE.py`.
+- [Original full edition](Legacy/Coastline-Evo.zip) and [play guide](Legacy/Coastline/PLAY.md). This edition ran out of working memory on the Evo used for this project.
 
 </details>
