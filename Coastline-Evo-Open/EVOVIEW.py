@@ -230,7 +230,15 @@ def render(s):
     if s['drive']:
         car(160,142,67,PAINT[s['paint']],detail)
     else:
-        person(160,137,46,COATS[s['coat']],s['stride'],True)
+        from EVOSPORT import lead
+        who=s.get('who',0)
+        coat=s['coat']
+        outfit=COATS[coat]
+        if (who,coat)==(0,0):
+            outfit=(117,77,126)
+        elif (who,coat)==(1,2):
+            outfit=(172,214,217)
+        lead(160,137,58,outfit,s['stride'],who)
     box(INK,0,0,320,21)
     label(MINT,4,19,NAMES[district(x,z)])
     heading=int((s['angle']%TAU)*8/TAU+0.5)%8

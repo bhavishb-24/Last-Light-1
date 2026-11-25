@@ -211,8 +211,37 @@ def intro():
                     label(MILK,111+i*17,99,"*")
                 stars=count
 
+def lead(x,y,h,coat,step,who,back=True):
+    def cut(c,points):
+        poly(c,[x+u*h//40 for u,v in points],[y+v*h//40 for u,v in points])
+    def trim(c,u,v,w,d):
+        box(c,x+u*h//40,y+v*h//40,max(1,w*h//40),max(1,d*h//40))
+    swing=int(sin(step)*2)
+    arm=9 if who else 7
+    skin=(188,132,101) if who else (226,163,122)
+    cut(ROAD,((-12,0),(10,-1),(14,2),(-15,2)))
+    cut(NIGHT,((-6,-17),(0,-16),(-2,-3+swing),(-7,swing)))
+    cut(STEEL,((0,-16),(6,-17),(7,-swing),(2,-3-swing)))
+    trim(MILK,-8,-1+swing,5,2)
+    trim(MILK,2,-1-swing,6,2)
+    cut(INK,((-arm-3,-24),(-arm,-28),(7,-29),(arm+3,-24),
+             (arm+2,-18),(6,-16),(-6,-16),(-arm-2,-18)))
+    cut(skin,((-arm,-27),(-arm+2,-26),(-arm+1,-20),(-arm-2,-20)))
+    cut(skin,((arm-2,-27),(arm,-26),(arm+2,-20),(arm-1,-20)))
+    cut(coat,((-arm+2,-27),(-4,-29),(5,-28),(arm-2,-25),(5,-17),(-5,-17)))
+    trim((59,47,65),-5,-18,10,1)
+    trim(skin,-arm-2,-19+swing,2,3)
+    trim(skin,arm,-19-swing,2,3)
+    if back and not who:
+        cut(NIGHT,((-4,-27),(-2,-28),(5,-18),(3,-17)))
+    else:
+        trim(MILK,-2,-27,4,2 if back else 8)
+    cut(skin,((-4,-37),(-2,-40),(3,-39),(5,-36),(3,-32),(-2,-30)))
+    cut(INK,((-5,-36),(-4,-40),(1,-41),(5,-39),(5,-36),(1,-37)))
+    if not who:
+        cut((64,39,43),((-4,-39),(-7,-36),(-7,-31),(-10,-27),(-5,-28),(-3,-35)))
+
 def front_menu(show_intro=True):
-    from EVOVIEW import person
     if show_intro:
         intro()
     settings=[False,1,True]
@@ -227,8 +256,8 @@ def front_menu(show_intro=True):
         box(STEEL,132,138,188,3)
         for x in (147,219,291):
             box(STEEL,x,138,3,59)
-        person(193,190,121,MINT,0,False)
-        person(258,190,133,BLUE,0,False)
+        lead(193,190,121,(117,77,126),0,0,False)
+        lead(258,190,133,(172,214,217),0,1,False)
         box(INK,0,0,133,210)
         label(SUN,8,27,"LAST LIGHT")
         label(MINT,8,48,"COASTLINE")
@@ -237,7 +266,7 @@ def front_menu(show_intro=True):
             if i==selected:
                 box(PINK,4,y-14,3,15)
             label(MILK if i==selected else STEEL,10,y,item)
-        label(MINT,8,181,"INPUT V17")
+        label(MINT,8,181,"INPUT V18")
         label(MILK,8,202,"ENTER select")
         key=keywait((UP,DOWN,OK,MAP,EXIT))
         if key==EXIT or (key==OK and selected==3):

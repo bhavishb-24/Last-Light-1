@@ -10,7 +10,7 @@ Explore a 16-district city on your TI-84 Evo. Walk, drive the expressway, follow
 
 The faster intro pack shows all nine fullscreen frames in order and finishes each frame before advancing. A slower calculator may take longer than 20 seconds. The intro has no on-screen prompts.
 
-Updating from V16? For the game itself, you can replace just EVOOPEN.py and EVOSPORT.py. The V17 title confirms the update.
+Updating from V17? Replace EVOVIEW.py and EVOSPORT.py. The title will show INPUT V18.
 
 [Version notes and rollback links](Coastline-Evo-Open/CHANGES.md) · [Current Python source](Coastline-Evo-Open/)
 

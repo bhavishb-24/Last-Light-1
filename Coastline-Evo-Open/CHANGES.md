@@ -1,5 +1,10 @@
 # Coastline Evo Open World changes
 
+## INPUT V18
+
+- Lena and Sol have distinct original sprites in the title menu and on foot. Lena has a tied-back silhouette and plum streetwear. Sol has a broad silhouette, short hair and pale coastal streetwear. Walking animates the legs and hands.
+- Replace EVOSPORT.py and EVOVIEW.py from V17. The optional fullscreen intro pack still works. [Roll back to V17](https://github.com/bhavishb-24/Last-Light/raw/a9237d2/Coastline-Evo-Open.zip).
+
 ## V17 fullscreen frame clarity update
 
 - Rebuilt only EVFS010.py, EVFS012.py, EVFS014.py and EVFS016.py from clearer moments in the same sequence. The four frames share the previous fast pack’s draw budget. The full pack uses 3,373 drawing rectangles, compared with 24,313 in the first fullscreen pack.
