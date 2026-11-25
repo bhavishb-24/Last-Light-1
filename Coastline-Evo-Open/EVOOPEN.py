@@ -63,12 +63,8 @@ def venue(s,n):
             earn(s,12)
             notice(s,'High score! +$12')
     elif n==3:
-        sheet("MARINA / WATER TAXI",("Ferry to West Quay: $5.","Your coupe stays parked."),"ENTER sail / CLEAR leave")
-        if keywait((OK,EXIT))==OK:
-            if pay(s,5):
-                s['x'],s['z']=center(0)
-                notice(s,'West Quay landing')
-            else: notice(s,'Fare is $5')
+        from EVOSPORT import marina
+        marina(s)
     elif n==7:
         from EVOSPORT import fishing
         fishing(s)
@@ -203,7 +199,7 @@ def play():
     draw.clear()
     skyline(7)
     box(INK,0,84,320,126)
-    label(SUN,12,110,"LAST LIGHT / INPUT V6")
+    label(SUN,12,110,"LAST LIGHT / INPUT V7")
     label(MILK,12,139,"ENTER new story")
     label(MINT,12,164,"2nd load checkpoint")
     label(MILK,12,196,"CLEAR quit")

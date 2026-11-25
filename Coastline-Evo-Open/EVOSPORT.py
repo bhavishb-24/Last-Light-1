@@ -114,3 +114,60 @@ def golf(s):
             power=max(0,min(6,power+(1 if k==RIGHT else -1)))
     earn(s,15)
     tell("THREE HOLES CLEARED",("Course prize $15",))
+
+
+def marina(s):
+    sheet("MARINA / TRANSPORT",("UP pilot a harbor skiff",
+          "RIGHT fly a floatplane","ENTER ferry to West Quay $5"),
+          "CLEAR leave")
+    key=keywait((UP,RIGHT,OK,EXIT))
+    if key==OK:
+        if pay(s,5):
+            s['x'],s['z']=center(0)
+            notice(s,'West Quay landing')
+        else:
+            notice(s,'Fare is $5')
+    elif key in (UP,RIGHT):
+        coastal_trip(s,key==RIGHT)
+
+def coastal_trip(s,plane):
+    x,y=1,3
+    altitude=1
+    cargo=False
+    while True:
+        heading="FLOATPLANE / BAY" if plane else "SKIFF / BAY"
+        status="Altitude "+str(altitude) if plane else "Avoid the shoals"
+        sheet(heading,(status,), "ARROWS move / ENTER dock")
+        box(BLUE,15,75,290,95)
+        for col in (3,4,5):
+            box(GOLD,17+36*col,119,32,20)
+        box(MINT,269,77,30,17)
+        if not cargo:
+            disc(SUN,251,129,4)
+        px,py=35+36*x,85+22*y
+        if plane:
+            line(MILK,px-9,py,px+9,py)
+            line(MILK,px,py-6,px,py+6)
+        else:
+            box(MILK,px-6,py-4,13,8)
+        label(MILK,10,181,"2nd altitude / CLEAR return" if plane else
+              ("Log aboard / Head to dock" if cargo else "Gold buoy: recover dock log"))
+        k=keywait((UP,DOWN,LEFT,RIGHT,MAP,OK,EXIT))
+        if k==EXIT:
+            return
+        if k==MAP and plane:
+            altitude=1-altitude
+        if k==OK and (x,y)==(7,0):
+            if plane and altitude:
+                continue
+            s['x'],s['z']=center(7)
+            if cargo:
+                earn(s,20)
+            notice(s,"Pier landing / Log +$20" if cargo else "Sun Pier landing")
+            return
+        u=max(0,min(7,x+(k==RIGHT)-(k==LEFT)))
+        v=max(0,min(3,y+(k==DOWN)-(k==UP)))
+        if not (v==2 and 3<=u<=5 and (not plane or not altitude)):
+            x,y=u,v
+        if (x,y)==(6,2):
+            cargo=True

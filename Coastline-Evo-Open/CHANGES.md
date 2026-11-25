@@ -1,5 +1,16 @@
 # Coastline Evo Open World changes
 
+## INPUT V7
+
+- The Marina offers a controllable skiff and floatplane on a compact 2D bay chart.
+- The skiff can collect a dock log at the gold buoy and earn $20 by docking at Sun Pier. Boats avoid the shoals, while the plane can cross them at altitude. Press 2nd to descend before landing.
+- The existing ferry remains available. These are shorter trips than the full edition's 3D coastal travel.
+- Updated Python files: EVOOPEN.py and EVOSPORT.py. The ZIP still contains five Python files. Checkpoint format is unchanged.
+
+### Roll back to INPUT V6
+
+Download the [V6 ZIP](https://github.com/bhavishb-24/Last-Light/raw/636cf9b/Coastline-Evo-Open.zip), replace the five Python files, and confirm the title says LAST LIGHT / INPUT V6.
+
 ## INPUT V6
 
 - At the West Quay safehouse, press LEFT to swap between Lena and Sol. They share progress and controls. Switching selects each lead's default jacket.
