@@ -10,7 +10,7 @@ See the [version notes and rollback instructions](Coastline-Evo-Open/CHANGES.md)
 
 ### Optional clip intro
 
-[Coastline-Evo-Clip.zip](Coastline-Evo-Clip.zip) includes ten frames sampled from the supplied video’s first 20 seconds. Press ENTER to skip the silent slideshow. If you already have V13, replace only EVOSPORT.py and look for V13 CLIP on the title menu.
+[Coastline-Evo-Clip.zip](Coastline-Evo-Clip.zip) shows two sharper stills sampled from the supplied video's first 20 seconds. Each is 96 × 54 with 16 colors. Press ENTER to skip. If you already have V13 or the earlier Clip Edition, replace only EVOSPORT.py and look for CLIP HD on the title menu.
 
 ## Compact driving edition
 
