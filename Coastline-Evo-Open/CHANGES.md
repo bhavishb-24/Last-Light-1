@@ -1,5 +1,11 @@
 # Coastline Evo Open World changes
 
+## INPUT V17
+
+- An optional fullscreen pack shows nine frames from the supplied MP4 in source order when you launch EVOOPEN. No prompts or progress bar appear over the frames. ENTER still skips.
+- The pack crops the frames to fill the 320 × 210 drawing area and reduces the palette to speed up drawing. It skips slots when playback falls behind the 20-second timeline.
+- From V16, replace EVOOPEN.py and EVOSPORT.py from the standard ZIP and install all ten files from Coastline-Evo-Fullscreen-Intro.zip. Without the pack, the game uses the built-in 2D intro. [Roll back to V16](https://github.com/bhavishb-24/Last-Light/raw/dbe6526/Coastline-Evo-Open.zip).
+
 ## INPUT V16
 
 - The 20-second 2D intro follows the reference's shot rhythm more closely: a split-panel collage, dark pause, six stars, citrus market, green palms, a pastel waterfront, orange street scene and WAVE emblem. Artwork is drawn in code using Coastline's characters and graphics.

@@ -186,7 +186,6 @@ def intro_card(card):
         box(NIGHT,137,64,46,46)
         label(SUN,155,91,"W")
         label(MILK,111,140,"WAVE RADIO")
-    label(MILK,8,205,"ENTER skip")
 
 def intro():
     start=monotonic()
@@ -212,9 +211,10 @@ def intro():
                     label(MILK,111+i*17,99,"*")
                 stars=count
 
-def front_menu():
+def front_menu(show_intro=True):
     from EVOVIEW import person
-    intro()
+    if show_intro:
+        intro()
     settings=[False,1,True]
     items=("New story","Load save","Settings","Quit")
     selected=0
@@ -237,7 +237,7 @@ def front_menu():
             if i==selected:
                 box(PINK,4,y-14,3,15)
             label(MILK if i==selected else STEEL,10,y,item)
-        label(MINT,8,181,"INPUT V16")
+        label(MINT,8,181,"INPUT V17")
         label(MILK,8,202,"ENTER select")
         key=keywait((UP,DOWN,OK,MAP,EXIT))
         if key==EXIT or (key==OK and selected==3):

@@ -2,6 +2,21 @@ import gc
 if hasattr(gc,"threshold"):
     gc.threshold(4096)
 gc.collect()
+def boot_clip():
+    # Play before loading the city renderer so frame imports have room.
+    try:
+        import EVFSPLAY
+        played=EVFSPLAY.play()
+    except (ImportError,MemoryError):
+        return False
+    finally:
+        from sys import modules
+        if 'EVFSPLAY' in modules:
+            del modules['EVFSPLAY']
+    return played
+
+clip_played=boot_clip()
+gc.collect()
 from EVODATA import *
 gc.collect()
 from EVOVIEW import *
@@ -220,7 +235,7 @@ def journal(s):
 
 def play():
     from EVOSPORT import front_menu
-    k,settings=front_menu()
+    k,settings=front_menu(not clip_played)
     if k==EXIT: return
     s=fresh()
     if k==MAP:

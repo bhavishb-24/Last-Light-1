@@ -8,6 +8,10 @@ This smaller calculator build includes walking, driving, shops, a city map, and 
 
 See the [version notes and rollback instructions](Coastline-Evo-Open/CHANGES.md).
 
+### Fullscreen intro pack
+
+Install V17 of the game, then transfer the ten Python files from the [Fullscreen Intro ZIP](Coastline-Evo-Fullscreen-Intro.zip). The frames play automatically when you run EVOOPEN. ENTER skips to the menu.
+
 ### Optional clip intro
 
 [Coastline-Evo-Clip.zip](Coastline-Evo-Clip.zip) shows two sharper stills sampled from the supplied video's first 20 seconds. Each is 96 × 54 with 16 colors. Press ENTER to skip. If you already have V13 or the earlier Clip Edition, replace only EVOSPORT.py and look for CLIP HD on the title menu.
