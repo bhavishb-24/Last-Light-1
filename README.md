@@ -4,7 +4,9 @@ An original open-world action-adventure game for the TI-84 Evo. Explore a compac
 
 ## Evo Open World edition
 
-This smaller calculator build includes walking, driving, shops, a city map, and a story. Unzip [Coastline-Evo-Open.zip](Coastline-Evo-Open.zip), send all four Python files through TI Connect Evo, then run EVOOPEN from PRGM → Python App.
+This smaller calculator build includes walking, driving, shops, a city map, and a story. Unzip [Coastline-Evo-Open.zip](Coastline-Evo-Open.zip), send all five Python files through TI Connect Evo, then run EVOOPEN from PRGM → Python App.
+
+See the [version notes and rollback instructions](Coastline-Evo-Open/CHANGES.md).
 
 ## Compact driving edition
 

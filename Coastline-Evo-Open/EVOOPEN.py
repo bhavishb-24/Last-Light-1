@@ -1,4 +1,6 @@
 import gc
+if hasattr(gc,"threshold"):
+    gc.threshold(1024)
 gc.collect()
 from EVODATA import *
 gc.collect()
@@ -32,7 +34,7 @@ def venue(s,n):
               "Mara lets the tape roll." if public else "Her brother stays anonymous.",
               "The station stays on air.","+$90 / City stays open."))
     elif n==0:
-        radio_bulletin(s)
+        safehouse(s)
     elif n==1:
         shop(s,"GLASSHOUSE SUPPLY",(("Signal valve",20,'stage',3),))
     elif n==5:
@@ -68,7 +70,11 @@ def venue(s,n):
                 notice(s,'West Quay landing')
             else: notice(s,'Fare is $5')
     elif n==7:
+        from EVOSPORT import fishing
         fishing(s)
+    elif n==9:
+        from EVOSPORT import pool
+        pool(s)
     elif n==10:
         tell("PALM GARDEN",("Three gold singles are lost.","One west of Kiln Yard.","One south of FM Tower.","One southwest of the Lido."))
     else:
@@ -194,7 +200,7 @@ def play():
     draw.clear()
     skyline(7)
     box(INK,0,84,320,126)
-    label(SUN,12,110,"LAST LIGHT / INPUT V4")
+    label(SUN,12,110,"LAST LIGHT / INPUT V5")
     label(MILK,12,139,"ENTER new story")
     label(MINT,12,164,"2nd load checkpoint")
     label(MILK,12,196,"CLEAR quit")
