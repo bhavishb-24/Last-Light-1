@@ -1,5 +1,10 @@
 # Coastline Evo Open World changes
 
+## V17 fullscreen pack update
+
+- The faster pack uses fewer and larger drawing regions. It draws every sampled frame in order and completes the active frame even if the original 20-second target has elapsed.
+- Replace all ten files from the [Fullscreen Intro Pack](../Coastline-Evo-Fullscreen-Intro.zip). ENTER still skips, with no text over the frames. The five V17 game files already support the update.
+
 ## INPUT V17
 
 - An optional fullscreen pack shows nine frames from the supplied MP4 in source order when you launch EVOOPEN. No prompts or progress bar appear over the frames. ENTER still skips.
