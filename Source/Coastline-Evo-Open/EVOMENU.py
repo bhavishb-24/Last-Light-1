@@ -71,22 +71,32 @@ def atlas(s):
 def shop(s,title,items):
     i=0
     info="UP/DOWN browse / ENTER buy"
+    box(NIGHT,0,0,320,39)
+    box(INK,0,121,320,89)
+    label(SUN,8,26,title)
+    label(MILK,8,203,"CLEAR leave")
+    previous_item=previous_cash=previous_info=None
     while True:
-        box(NIGHT,0,0,320,210)
-        box(VIOLET,0,39,320,85)
-        box(INK,0,121,320,89)
-        label(SUN,8,26,title)
-        label(MILK,250,26,'$'+str(s['cash']))
+        if previous_cash!=s['cash']:
+            box(NIGHT,250,0,70,39)
+            label(MILK,250,26,'$'+str(s['cash']))
+            previous_cash=s['cash']
         name,cost,kind,val=items[i]
-        if kind=='paint': car(160,112,112,PAINT[val],True)
-        elif kind in ('shoes','coat'): person(160,113,69,COATS[val] if kind=='coat' else COATS[s['coat']],0,True)
-        else:
-            box(INK,139,70,42,38)
-            box(GOLD,146,55,28,35)
-            box(MILK,152,60,5,14)
-        label(MILK,8,144,name+'  $'+str(cost))
-        label(MINT,8,169,info)
-        label(MILK,8,203,"CLEAR leave")
+        if previous_item!=i:
+            box(VIOLET,0,39,320,82)
+            if kind=='paint': car(160,112,112,PAINT[val],True)
+            elif kind in ('shoes','coat'): person(160,113,69,COATS[val] if kind=='coat' else COATS[s['coat']],0,True)
+            else:
+                box(INK,139,70,42,38)
+                box(GOLD,146,55,28,35)
+                box(MILK,152,60,5,14)
+            box(INK,0,123,320,25)
+            label(MILK,8,144,name+'  $'+str(cost))
+            previous_item=i
+        if previous_info!=info:
+            box(INK,0,149,320,29)
+            label(MINT,8,169,info)
+            previous_info=info
         k=keywait((UP,DOWN,OK,EXIT))
         if k==EXIT: return
         if k in (UP,DOWN):
@@ -127,8 +137,10 @@ def phone(s):
     apps=("GPS","Taxi","Deposit","Withdraw","Scanner","Delivery")
     hints=("Pin next objective","Ride to a district $6","Move cash to savings",
            "Move savings to cash","Locate parked coupe","Bring coupe here $5")
+    previous=None
     while True:
-        phone_screen(s,apps,hints,selected)
+        phone_screen(s,apps,hints,selected,previous)
+        previous=selected
         k=keywait((UP,DOWN,LEFT,RIGHT,OK,EXIT))
         if k==EXIT:
             return
@@ -158,8 +170,10 @@ def taxi(s):
         notice(s,"Taxi needs a safe stop on foot")
         return
     n=district(s['x'],s['z'])
+    sheet("COASTLINE TAXI",("","Fare $6"),"UP/DOWN  ENTER  CLEAR back")
     while True:
-        sheet("COASTLINE TAXI",(NAMES[n],"Fare $6"),"UP/DOWN  ENTER  CLEAR back")
+        box(INK,0,43,320,25)
+        label(MILK,10,65,NAMES[n])
         k=keywait((UP,DOWN,OK,EXIT))
         if k==EXIT:
             return
@@ -291,13 +305,16 @@ def safehouse(s):
         radio_bulletin(s)
 
 
-def phone_screen(s,apps,hints,selected):
-    box(INK,0,0,320,210)
-    box(STEEL,36,3,248,204)
-    box(NIGHT,40,7,240,196)
-    label(MINT,48,28,"COASTLINE")
-    label(MILK,48,46,"Cash $%d  Bank $%d"%(s['cash'],s['bank']))
+def phone_screen(s,apps,hints,selected,previous=None):
+    if previous is None:
+        box(INK,0,0,320,210)
+        box(STEEL,36,3,248,204)
+        box(NIGHT,40,7,240,196)
+        label(MINT,48,28,"COASTLINE")
+        label(MILK,48,46,"Cash $%d  Bank $%d"%(s['cash'],s['bank']))
     for i,name in enumerate(apps):
+        if previous is not None and i!=previous and i!=selected:
+            continue
         x,y=48+77*(i%3),54+54*(i//3)
         c=(MINT,GOLD,BLUE,PINK,STEEL,SUN)[i]
         box(MILK if i==selected else ROAD,x,y,70,49)
@@ -313,5 +330,7 @@ def phone_screen(s,apps,hints,selected):
             disc(INK,x+30,y+20,2)
             disc(INK,x+40,y+20,2)
         label(INK if i==selected else MILK,x+4,y+43,name)
+    box(NIGHT,48,160,229,23)
     label(MINT,48,179,hints[selected])
-    label(MILK,48,198,"ENTER open / CLEAR back")
+    if previous is None:
+        label(MILK,48,198,"ENTER open / CLEAR back")

@@ -1,5 +1,9 @@
 # Coastline Evo Open World changes
 
+## INPUT V26
+
+- Phone browsing refreshes only the relevant tiles and app hint. Shops retain their headers and update the item preview, cash, and status only as needed. The taxi list refreshes only the destination name.
+
 ## INPUT V25
 
 - Atlas draws once per opening. Edge ticks and the district label show the cursor while browsing.
