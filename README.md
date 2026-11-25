@@ -22,6 +22,8 @@ See the [version notes and rollback instructions](Coastline-Evo-Open/CHANGES.md)
 
 [Download the faster frame test](Coastline-Evo-Fast-Frame-Test.zip) to try drawing larger rectangles with the same sample images. Replace all four test files together because the frame format changed.
 
+[Download the ordered frame test](Coastline-Evo-Ordered-Frame-Test.zip) to preview nine frames taken directly from the MP4 in time order from 0:00 to 0:18. Transfer all ten Python files, replace matching test files, and run EVFRTEST.
+
 ## Compact driving edition
 
 If the full Coastline package runs out of memory on your calculator, try the standalone [Coastline-Evo-Lite.zip](Coastline-Evo-Lite.zip). It has a 12-district route map, delivery jobs, and perspective driving. It omits on-foot exploration and the phone systems. Transfer only LASTLITE.py from the ZIP and run LASTLITE in the Python App.
