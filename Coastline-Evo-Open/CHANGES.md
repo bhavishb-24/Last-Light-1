@@ -1,5 +1,10 @@
 # Coastline Evo Open World changes
 
+## INPUT V16
+
+- The 20-second 2D intro follows the reference's shot rhythm more closely: a split-panel collage, dark pause, six stars, citrus market, green palms, a pastel waterfront, orange street scene and WAVE emblem. Artwork is drawn in code using Coastline's characters and graphics.
+- From V15, replace EVOSPORT.py. The ZIP still contains five Python files. [Roll back to V15](https://github.com/bhavishb-24/Last-Light/raw/09e61f7/Coastline-Evo-Open.zip).
+
 ## INPUT V15
 
 - The loading screen uses original color artwork in a 2D sequence inspired by the reference clip: illustrated collage, animated stars, two coastal cards and a WAVE radio end card.

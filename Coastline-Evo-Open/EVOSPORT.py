@@ -116,65 +116,101 @@ def golf(s):
     tell("THREE HOLES CLEARED",("Course prize $15",))
 
 
+INTRO_CUTS=(3.8,5.4,7.7,9.4,11.3,13.3,15.5,17.1,20)
+
 def intro_card(card):
     from EVOVIEW import person
-    box(INK,0,0,320,210)
-    if card in (0,2,3):
-        skyline(card+2)
-        box((44,91,112),0,84,320,86)
-        if card==0:
-            for x in (0,108,222):
-                box((118,83,115) if x==108 else (63,77,112),x,90,104,84)
-            person(51,171,82,MINT,0,False)
-            person(265,171,78,BLUE,0,False)
-            car(155,159,91,PINK,True)
-        elif card==2:
-            for x in (22,84,222,278):
-                palm(x,167,90-x%20,NIGHT)
-            disc(SUN,160,110,33)
-            car(162,168,136,MINT,True)
-        else:
-            box((30,66,88),0,101,320,70)
-            for x in (18,73,244,287):
-                line(STEEL,x,128,x,171)
-            line(MILK,0,128,319,128)
-            person(134,176,99,MINT,0,False)
-            person(190,176,105,BLUE,0,False)
-        box(NIGHT,5,5,152,40)
-        label(SUN,11,22,"LAST LIGHT")
-        label(MINT,11,40,"COASTLINE")
+    dark=(39,36,56)
+    box(dark,0,0,320,210)
+    if card==0:
+        skyline(2)
+        box(BLUE,0,84,320,95)
+        for i,c in enumerate((VIOLET,STEEL,PINK,BLUE,(158,89,113),(71,105,114))):
+            x=(i%3)*107+2
+            y=(i//3)*83+7
+            poly(c,[x+7,x+103,x+97,x],[y,y,y+78,y+78])
+        palm(22,78,59,INK)
+        person(151,85,81,MINT,0,False)
+        car(260,68,79,GOLD,True)
+        car(52,151,86,PINK,True)
+        palm(199,159,63,INK)
+        person(268,171,85,BLUE,0,False)
+        poly(INK,[103,220,211,95],[73,73,132,132])
+        label(SUN,111,96,"LAST LIGHT")
+        label(MINT,111,120,"COASTLINE")
+    elif card==3:
+        box((27,81,59),0,21,320,155)
+        for i in range(20):
+            x=(17+i*71)%320
+            y=39+i*37%124
+            disc((54,121,65),x,y,16+i%10)
+            disc((245,144,44),x+5,y+4,6+i%6)
+            disc((255,213,105),x+3,y+2,2+i%3)
+        poly((221,164,87),[44,278,286,37],[132,115,161,179])
+        label(INK,92,152,"CORAL MARKET")
     elif card==4:
-        box(VIOLET,107,57,106,66)
-        box(NIGHT,111,61,98,58)
-        label(SUN,119,88,"WAVE RADIO")
-        label(MINT,132,109,"84 FM")
-    box(INK,0,175,320,35)
-    label(MILK,8,207,"ENTER skip")
+        box((46,76,42),0,21,320,155)
+        disc((203,218,121),160,94,64)
+        for x in (19,56,242,284):
+            palm(x,176,122,NIGHT)
+        for x in (104,130,185,211):
+            box((143,162,83),x,67,8,94)
+        box((189,200,112),94,60,130,8)
+        box((83,128,72),0,162,320,16)
+    elif card==5:
+        box((155,206,217),0,21,320,155)
+        box((85,144,173),0,122,320,54)
+        disc(GOLD,160,95,59)
+        disc((126,150,193),160,95,53)
+        for x,direction in ((142,1),(178,-1)):
+            disc(PINK,x,111,15)
+            line(PINK,x,107,x+direction*12,82)
+            disc(PINK,x+direction*12,79,7)
+            line(INK,x+direction*13,77,x+direction*20,80)
+        line(MILK,8,145,104,145)
+        line(MILK,213,158,303,158)
+    elif card==6:
+        box((84,38,62),0,21,320,155)
+        for i in range(12):
+            x=i*29-8
+            y=96+(i*31)%51
+            box((129,57,60),x,y-38,18,55)
+            box(GOLD,x+4,y-22,8,5)
+        disc((241,117,56),244,66,31)
+        car(124,154,137,(227,86,56),True)
+        person(252,173,89,PINK,0,False)
+    elif card==7:
+        label(MILK,155,101,"*")
+    elif card==8:
+        box(STEEL,134,61,52,52)
+        box(NIGHT,137,64,46,46)
+        label(SUN,155,91,"W")
+        label(MILK,111,140,"WAVE RADIO")
+    label(MILK,8,205,"ENTER skip")
 
 def intro():
     start=monotonic()
     previous=-1
-    pulse=-1
+    stars=-1
+    card=0
     while True:
         if get_key(0) in (OK,EXIT):
             return
         elapsed=monotonic()-start
         if elapsed>=20:
             return
-        card=0 if elapsed<4 else (1 if elapsed<8 else
-             (2 if elapsed<12 else (3 if elapsed<16 else 4)))
+        while elapsed>=INTRO_CUTS[card]:
+            card+=1
         if card!=previous:
             intro_card(card)
             previous=card
-        step=int(elapsed*4)
-        if step==pulse:
-            continue
-        pulse=step
-        if card==1:
-            box(INK,89,80,142,25)
-            for star in range(1+(step-16)//3):
-                label(SUN if star%2 else MILK,98+21*star,98,"*")
-        box(MINT,8,182,3*(step+1),3)
+        if card==2:
+            count=min(6,1+int((elapsed-5.4)*3))
+            if count!=stars:
+                box((39,36,56),108,79,106,28)
+                for i in range(count):
+                    label(MILK,111+i*17,99,"*")
+                stars=count
 
 def front_menu():
     from EVOVIEW import person
@@ -201,7 +237,7 @@ def front_menu():
             if i==selected:
                 box(PINK,4,y-14,3,15)
             label(MILK if i==selected else STEEL,10,y,item)
-        label(MINT,8,181,"INPUT V15")
+        label(MINT,8,181,"INPUT V16")
         label(MILK,8,202,"ENTER select")
         key=keywait((UP,DOWN,OK,MAP,EXIT))
         if key==EXIT or (key==OK and selected==3):
