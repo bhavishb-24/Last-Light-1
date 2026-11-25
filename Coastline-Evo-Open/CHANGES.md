@@ -1,5 +1,9 @@
 # Coastline Evo Open World changes
 
+## V17 fullscreen pack diagnostics
+
+- Replace EVFSPLAY.py from the current fullscreen ZIP. The player ignores ENTER for the first 0.9 seconds and displays the frame name and exception if loading or drawing fails. Acknowledge an error with ENTER to continue to the title. Successful playback still has no overlay.
+
 ## V17 fullscreen pack update
 
 - The faster pack uses fewer and larger drawing regions. It draws every sampled frame in order and completes the active frame even if the original 20-second target has elapsed.
