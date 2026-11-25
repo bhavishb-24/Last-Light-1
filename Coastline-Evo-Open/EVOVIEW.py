@@ -96,13 +96,7 @@ def building(cam,b):
     if h<3.4:
         face(cam,((l,h,a),(r,h,a),(r,h,f),(l,h,f)),c)
 
-def sample(buffer):
-    if buffer is not None and len(buffer)<4:
-        key=get_key(0)
-        if key:
-            buffer.append(key)
-
-def render(s,buffer=None):
+def render(s):
     x,z=s['x'],s['z']
     f,c=sin(s['angle']),cos(s['angle'])
     cam=(x-6*f,z-6*c,f,c)
@@ -123,8 +117,7 @@ def render(s,buffer=None):
     box((54,99,132),0,68,320,120)
     for j in range(3 if detail else 0):
         box((110,151,166),j*94+14,72+j*3,32-j*4,1)
-    ground(cam,-10,-10,120,88,TILE)
-    sample(buffer)
+    ground(cam,-10,-10,186,88,TILE)
     # Continuous road network and sidewalks.
     if detail:
         for i in range(4):
@@ -134,7 +127,7 @@ def render(s,buffer=None):
         for i in range(3):
             a=i*32
             if abs(z-a)<48:
-                ground(cam,-10,a-4.5,120,9,WALK)
+                ground(cam,-10,a-4.5,186,9,WALK)
     for i in range(4):
         a=i*32
         if abs(x-a)<48:
@@ -142,8 +135,15 @@ def render(s,buffer=None):
     for i in range(3):
         a=i*32
         if abs(z-a)<48:
-            ground(cam,-10,a-3,120,6,ASPHALT)
-    sample(buffer)
+            ground(cam,-10,a-3,186 if i==1 else 122,6,ASPHALT)
+    if x>80:
+        ground(cam,138,-8,12,84,WALK)
+        ground(cam,139,-8,10,84,ASPHALT)
+        ground(cam,143.85,-8,.3,84,SUN)
+        for a,b,u,v in RAMPS:
+            if abs(z-b)<48:
+                face(cam,((a,0,b-3),(u,0,v-3),(u,0,v+3),(a,0,b+3)),ASPHALT)
+                face(cam,((a,0,b),(u,0,v),(u,0,v+.25),(a,0,b+.25)),SUN)
     # Short paint dashes mark the closest avenues.
     ix=int((x+16)//32)*32
     iz=int((z+16)//32)*32
@@ -161,7 +161,7 @@ def render(s,buffer=None):
     for i in range(len(BLOCKS)):
         b=BLOCKS[i]
         add(b[0],b[1],0,i,8)
-    for i in range(12):
+    for i in range(len(NAMES)):
         bx,bz=door(i)
         add(bx-1.4,bz,1,i,1)
         bx,bz=center(i)
@@ -185,7 +185,6 @@ def render(s,buffer=None):
         add(bx,bz,6,0,2)
     things.sort()
     for idx in range(len(things)-1,-1,-1):
-        if idx%4==0: sample(buffer)
         d,k,i,bx,bz=things[idx]
         if k==0:
             building(cam,BLOCKS[i])

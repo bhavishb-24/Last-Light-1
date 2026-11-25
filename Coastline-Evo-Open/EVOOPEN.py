@@ -1,6 +1,6 @@
 import gc
 if hasattr(gc,"threshold"):
-    gc.threshold(1024)
+    gc.threshold(4096)
 gc.collect()
 from EVODATA import *
 gc.collect()
@@ -63,8 +63,12 @@ def venue(s,n):
             earn(s,12)
             notice(s,'High score! +$12')
     elif n==3:
-        from EVOSPORT import marina
-        marina(s)
+        sheet("MARINA / WATER TAXI",("Ferry to West Quay: $5.","Your coupe stays parked."),"ENTER sail / CLEAR leave")
+        if keywait((OK,EXIT))==OK:
+            if pay(s,5):
+                s['x'],s['z']=center(0)
+                notice(s,'West Quay landing')
+            else: notice(s,'Fare is $5')
     elif n==7:
         from EVOSPORT import fishing
         fishing(s)
@@ -74,6 +78,9 @@ def venue(s,n):
     elif n==10:
         from EVOSPORT import palm_garden
         palm_garden(s)
+    elif n>=12:
+        tell(VENUES[n],("Coast Expressway access",
+             "Follow the gold merge lines."))
     else:
         chatter=("The signal is yours now.","Try the shelves at Parts.","Bring me the signal valve.","Last ferry leaves at dusk.",
                  "Dispatch needs a rider.","The new jackets just arrived.","The machines still take coins.","I kept a copy of that reel.",
@@ -114,6 +121,8 @@ def interact(s):
 def tick(s,k,dt):
     driving=s['drive']
     limit=14 if driving else (6 if s['shoes'] else 4)
+    if driving and highway(s['x'],s['z']):
+        limit=19
     if not driving and s.get("fit",0)>s['clock']:
         limit+=2
     if k==LEFT: s['angle']=(s['angle']-0.39)%TAU
@@ -199,7 +208,7 @@ def play():
     draw.clear()
     skyline(7)
     box(INK,0,84,320,126)
-    label(SUN,12,110,"LAST LIGHT / INPUT V7")
+    label(SUN,12,110,"LAST LIGHT / INPUT V8")
     label(MILK,12,139,"ENTER new story")
     label(MINT,12,164,"2nd load checkpoint")
     label(MILK,12,196,"CLEAR quit")

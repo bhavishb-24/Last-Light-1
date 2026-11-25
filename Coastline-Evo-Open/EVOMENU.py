@@ -5,14 +5,19 @@ def atlas(s):
     while True:
         sheet("CITY ATLAS    N ^",(),"Arrows browse / ENTER pin")
         def dotpos(x,z):
-            return (int(39+x*2.36),int(141-z*1.20))
+            return (int(31+x*1.52),int(141-z*1.20))
         for i in range(4):
             a,b=dotpos(i*32,64)
             line(STEEL,a,b,a,141)
         for i in range(3):
             a,b=dotpos(0,i*32)
-            line(STEEL,a,b,265,b)
-        for n in range(12):
+            line(STEEL,a,b,295 if i==1 else 222,b)
+        line(GOLD,250,53,250,153)
+        for x,z,u,v in RAMPS:
+            a,b=dotpos(x,z)
+            c,e=dotpos(u,v)
+            line(GOLD,a,b,c,e)
+        for n in range(len(NAMES)):
             a,b=dotpos(*center(n))
             disc(TRIM[n%4],a,b,3)
         n=goal(s)
@@ -33,10 +38,20 @@ def atlas(s):
             s['pin']=pin
             notice(s,'Pinned '+NAMES[pin])
             return
-        if k==LEFT and pin%4: pin-=1
-        if k==RIGHT and pin%4<3: pin+=1
-        if k==UP and pin>=4: pin-=4
+        if k==LEFT and pin>=12:
+            pin=(3,7,11,13)[pin-12]
+        elif k==LEFT and pin%4: pin-=1
+        if k==RIGHT:
+            if pin in (3,7,11):
+                pin=12+pin//4
+            elif pin==13:
+                pin=15
+            elif pin<12 and pin%4<3:
+                pin+=1
+        if k==UP and 4<=pin<12: pin-=4
+        elif k==UP and pin in (13,14): pin-=1
         if k==DOWN and pin<8: pin+=4
+        elif k==DOWN and pin in (12,13): pin+=1
 
 def shop(s,title,items):
     i=0
@@ -144,18 +159,20 @@ def taxi(s):
 
 
 def street_map(s,previous):
-    x=int(30+s['x']*2.4)
+    x=int(30+s['x']*1.52)
     y=int(148-s['z']*1.45)
     if previous is None:
         box(INK,0,0,320,210)
-        for n in range(len(NAMES)):
-            px=(30,106,183,260)[n%4]
+        for n in range(12):
+            px=(30,78,127,175)[n%4]
             py=(55,101,148)[n//4]
             box(ROAD,px-3,py-3,7,7)
             if n%4<3:
-                box(ROAD,px,py-3,(76,77,77)[n%4],7)
+                box(ROAD,px,py-3,(48,49,48)[n%4],7)
             if n<8:
                 box(ROAD,px-3,py,7,(46,47)[n//4])
+        box(ROAD,175,98,123,7)
+        box(ROAD,246,38,7,123)
         box(NIGHT,0,171,320,39)
         label(MINT,5,206,"2nd map / DEL phone / TRACE 3D")
     elif previous[:2]!=(x,y):
@@ -163,7 +180,9 @@ def street_map(s,previous):
         box(INK,px-1,py-1,3,3)
         for a in range(px-1,px+2):
             for b in range(py-1,py+2):
-                if (27<=a<=263 and min(abs(b-55),abs(b-101),abs(b-148))<=3) or (52<=b<=151 and min(abs(a-30),abs(a-106),abs(a-183),abs(a-260))<=3):
+                if (27<=a<=178 and min(abs(b-55),abs(b-101),abs(b-148))<=3) or (52<=b<=151 and min(abs(a-30),abs(a-78),abs(a-127),abs(a-175))<=3):
+                    box(ROAD,a,b,1,1)
+                if (175<=a<298 and 98<=b<105) or (246<=a<253 and 38<=b<161):
                     box(ROAD,a,b,1,1)
     status=(district(s['x'],s['z']),s['cash'],s['drive'],gps(s))
     if previous is None or previous[:2]!=(x,y) or previous[2][2]!=s['drive']:

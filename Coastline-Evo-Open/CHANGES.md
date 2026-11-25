@@ -1,5 +1,16 @@
 # Coastline Evo Open World changes
 
+## INPUT V8
+
+- Four districts extend the city east: Northgate, East Docks, Southbank and Breakwater.
+- The Coast Expressway runs north to south, with three marked at-grade merge ramps and a higher driving speed limit. The atlas shows the routes.
+- V8 removes the V7 skiff and floatplane trips. The original Marina ferry is available.
+- The ZIP contains five Python files. Older checkpoints load in V8. Save from one of the original 12 districts if you intend to load that code in V6.
+
+### Roll back to INPUT V6
+
+Download the [V6 ZIP](https://github.com/bhavishb-24/Last-Light/raw/636cf9b/Coastline-Evo-Open.zip), replace the five Python files, and check for LAST LIGHT / INPUT V6.
+
 ## INPUT V7
 
 - The Marina offers a controllable skiff and floatplane on a compact 2D bay chart.

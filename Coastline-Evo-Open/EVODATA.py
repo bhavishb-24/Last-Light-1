@@ -18,7 +18,8 @@ BLUE=(54,145,180)
 RED=(224,68,90)
 NAMES=("West Quay","Glasshouse","FM Tower","Marina",
        "Kiln Yard","Lantern Sq","Arcade","Sun Pier",
-       "Foundry","Velvet Club","Palms","The Lido")
+       "Foundry","Velvet Club","Palms","The Lido",
+       "Northgate","East Docks","Southbank","Breakwater")
 def color(c):
     draw.set_color(c[0],c[1],c[2])
 
@@ -123,10 +124,12 @@ PAINT=(MINT,PINK,GOLD)
 COATS=(BLUE,PINK,MINT)
 TRIM=(MINT,SUN,PINK,BLUE)
 SIGNS=("WAVE","PARTS","FM 84","SLIP","POST","THREAD",
-       "PIXEL","PIER","PAINT","VELVET","PALMS","LIDO")
+       "PIXEL","PIER","PAINT","VELVET","PALMS","LIDO",
+       "NORTH","DOCK","SOUTH","POINT")
 VENUES=("Mara's studio","Glasshouse Supply","FM transmitter","Marina slips",
         "City Dispatch","Thread Dept.","Pixel Palace","Pier booth",
-        "Foundry Customs","Velvet Club","Palm Garden","Lido Rally")
+        "Foundry Customs","Velvet Club","Palm Garden","Lido Rally",
+        "Northgate overlook","East Docks office","Southbank service","Breakwater lookout")
 GOALS=(0,7,1,2,6,-1,-1)
 TASK=("Meet Mara at West Quay","Interview Ivo at Sun Pier","Buy a valve at Glasshouse",
       "Tune the tower transmitter","Arcade: air it / Club: dub it","City broadcast is live","Archive tape is safe")
@@ -138,7 +141,14 @@ WALK=(158,142,150)
 TILE=(95,123,128)
 TAU=6.2831853
 
+RAMPS=((112,64,144,51),(112,32,144,32),(112,0,144,-6))
+
+def highway(x,z):
+    return abs(x-144)<5 and -8<z<76
+
 def center(n):
+    if n>=12:
+        return ((124,64),(128,32),(124,0),(160,32))[n-12]
     return (32*(n%4),32*(2-n//4))
 
 def door(n):
@@ -146,6 +156,10 @@ def door(n):
     return x+8,z+5
 
 def district(x,z):
+    if x>=150:
+        return 15
+    if x>=112:
+        return 12 if z>=48 else (14 if z<16 else 13)
     col=max(0,min(3,int((x+16)//32)))
     row=max(0,min(2,int((z+16)//32)))
     return col+4*(2-row)
@@ -155,7 +169,7 @@ def near(x,z,u,v,r):
 
 # x,z half-width, half-depth, height, facade color, trim, shop index.
 BLOCKS=[]
-for n in range(12):
+for n in range(len(NAMES)):
     x,z=door(n)
     BLOCKS.append((x,z+3.9,3.8,3,3.7+n%3, (NIGHT,VIOLET,STEEL)[n%3],TRIM[n%4],n))
 for n in range(6):
@@ -164,7 +178,7 @@ for n in range(6):
     BLOCKS.append((x,z,4.8,4.4,7+n%4*2,NIGHT,STEEL,-1))
 
 def blocked(x,z,r):
-    if x< -10 or x>110 or z< -10 or z>78:
+    if x< -10 or x>176 or z< -10 or z>78:
         return True
     for bx,bz,w,d,h,c,t,n in BLOCKS:
         if abs(x-bx)<w+r and abs(z-bz)<d+r:
@@ -217,7 +231,7 @@ def restore(code):
     for base,key in ((13,'job'),(8,'records'),(2,'shoes'),(3,'paint'),(3,'coat'),(1000,'cash'),(7,'stage')):
         s[key]=v%base
         v//=base
-    if v>=12:
+    if v>=len(NAMES):
         return None
     s['bank']=bank
     x,z=center(v)
@@ -248,7 +262,7 @@ def tell(title,lines):
 def closest(s):
     x,z=s['x'],s['z']
     # Doorways win if a vehicle is parked across one.
-    for n in range(12):
+    for n in range(len(NAMES)):
         u,v=door(n)
         if near(x,z,u,v,2.8):
             return ('door',n)
