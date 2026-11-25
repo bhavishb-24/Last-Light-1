@@ -16,6 +16,10 @@ See the [version notes and rollback instructions](Coastline-Evo-Open/CHANGES.md)
 
 [Download the 5 FPS test ZIP](Coastline-Evo-5FPS-Test.zip). Extract it and send CLIP00.8xv2 by itself using WebTILP first. If accepted, send the other nine pictures and replace CLIPTEST.py. The revised test uses 160 × 90 RLE pictures. Run CLIPTEST in the Python App. The test displays the slowest frame draw, late frame count and total elapsed time. It runs separately from the game.
 
+### Python frame playback test
+
+[Download the Python Frame Test](Coastline-Evo-Python-Frame-Test.zip). Extract it and send all four Python files through TI Connect Evo. Run EVFRTEST from the Python App. The test shows three sample frames and reports the slowest load and draw time. It runs separately from Coastline.
+
 ## Compact driving edition
 
 If the full Coastline package runs out of memory on your calculator, try the standalone [Coastline-Evo-Lite.zip](Coastline-Evo-Lite.zip). It has a 12-district route map, delivery jobs, and perspective driving. It omits on-foot exploration and the phone systems. Transfer only LASTLITE.py from the ZIP and run LASTLITE in the Python App.
