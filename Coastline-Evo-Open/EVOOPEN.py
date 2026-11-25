@@ -211,21 +211,27 @@ def play():
     tell("STREET CONTROLS",("ENTER: talk, shop, car, park","2nd: map and district pins","ALPHA: journal / checkpoint","CLEAR: journal and quit","DEL: phone and taxi"))
     buffer=[]
     next_frame=0
-    perspective=False
+    perspective=True
     previous=None
+    last_view=None
     while True:
         start=monotonic()
         if not perspective:
             previous=street_map(s,previous)
         elif start>=next_frame:
-            render(s,buffer)
-            # Keep polling and advancing the simulation between idle redraws.
-            next_frame=start+(0.15 if s['speed'] or s['heat'] else 0.5)
+            view=(s['x'],s['z'],s['angle'],s['drive'],s['cash'],s['pin'],
+                  s['msg'] if s['ttl']>0 else '',int(s['clock']//90),s['heat']>0)
+            if view!=last_view or s['heat'] or s['race']>=0:
+                render(s,buffer)
+                last_view=view
+            next_frame=start+0.15
         k=buffer.pop(0) if buffer else get_key(0)
         while not k and monotonic()-start<0.075:
             k=get_key(0)
         if k:
             next_frame=0
+        if k in (14,EXIT,31,23,MAP,OK):
+            last_view=None
         if k==14:
             perspective=not perspective
             previous=None
