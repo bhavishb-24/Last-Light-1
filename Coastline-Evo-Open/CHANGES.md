@@ -1,5 +1,10 @@
 # Coastline Evo Open World changes
 
+## INPUT V10
+
+- City streets have dashed yellow center lines in both Fast and Full 3D. The raised expressway has white edge lines.
+- From V9, replace EVOVIEW.py and EVOOPEN.py. To revert, download the [V9 ZIP](https://github.com/bhavishb-24/Last-Light/raw/e9c93f1/Coastline-Evo-Open.zip).
+
 ## INPUT V9
 
 - Coast Expressway now has a raised deck. The three ramps climb from street level to four game units, and the 3D camera follows the road height. The road surface has a single level at each location.

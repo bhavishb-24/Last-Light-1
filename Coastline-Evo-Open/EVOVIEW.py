@@ -141,11 +141,11 @@ def render(s):
     # Short paint dashes mark the closest avenues.
     ix=int((x+16)//32)*32
     iz=int((z+16)//32)*32
-    for off in ((-12,-4,4,12) if s['detail'] else ()):
-        if -8<=iz+off<=75 and 0<=ix<=96:
-            ground(cam,ix,iz+off,0.12,1.8,SUN)
-        if -8<=ix+off<=105 and 0<=iz<=64:
-            ground(cam,ix+off,iz,1.8,0.12,SUN)
+    for off in (-16,-8,0,8,16):
+        if -8<=iz+off<=74 and 0<=ix<=96 and off:
+            ground(cam,ix-.14,iz+off-.9,.28,2.6,SUN)
+        if -8<=ix+off<=108 and 0<=iz<=64 and off:
+            ground(cam,ix+off-.9,iz-.14,2.6,.28,SUN)
     if 0<=ix<=96 and 0<=iz<=64:
         for stripe in (-2,0,2):
             ground(cam,ix+stripe-.28,iz+3.5,.55,1.25,MILK)
@@ -248,6 +248,9 @@ def overpass(cam,z):
     face(cam,((139,4,-8),(149,4,-8),(149,4,76),(139,4,76)),ASPHALT)
     face(cam,((143.85,4.03,-8),(144.15,4.03,-8),
               (144.15,4.03,76),(143.85,4.03,76)),SUN)
+    for edge in (139.55,148.25):
+        face(cam,((edge,4.03,-8),(edge+.2,4.03,-8),
+                  (edge+.2,4.03,76),(edge,4.03,76)),MILK)
     for a,b,u,v in RAMPS:
         if abs(z-b)<48:
             face(cam,((a,0,b-3),(u,4,v-3),(u,4,v+3),(a,0,b+3)),ASPHALT)
