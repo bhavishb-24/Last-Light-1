@@ -30,33 +30,36 @@ def next_district(pin,key):
 
 def atlas(s):
     pin=district(s['x'],s['z'])
+    sheet("CITY ATLAS    N ^",(),"Arrows browse / ENTER pin")
+    map_surface(0,47,308,165)
+    for i in range(BUILDINGS):
+        x,z,w,h,_,_,_,venue=building_at(i)
+        a,b=map_point(x-w,z+h)
+        u,v=map_point(x+w,z-h)
+        box(VIOLET if venue>=0 else (70,79,88),a,b,max(1,u-a),max(1,v-b))
+    for x,z,u,v in RAMPS:
+        a,b=map_point(x,z)
+        c,e=map_point(u,v)
+        line(GOLD,a,b,c,e)
+    for n in range(len(NAMES)):
+        a,b=map_point(*center(n))
+        disc(TRIM[n%4],a,b,3)
+    n=goal(s)
+    if n>=0:
+        a,b=map_point(*center(n))
+        disc(GOLD,a,b,6)
+    a,b=map_point(s['cx'],s['cz'])
+    box(PINK,a-2,b-2,5,5)
+    a,b=map_point(s['x'],s['z'])
+    disc(MILK,a,b,3)
     while True:
-        sheet("CITY ATLAS    N ^",(),"Arrows browse / ENTER pin")
-        map_surface(0,44,320,165)
-        for i in range(BUILDINGS):
-            x,z,w,h,_,_,_,venue=building_at(i)
-            a,b=map_point(x-w,z+h)
-            u,v=map_point(x+w,z-h)
-            box(VIOLET if venue>=0 else (70,79,88),a,b,max(1,u-a),max(1,v-b))
-        for x,z,u,v in RAMPS:
-            a,b=map_point(x,z)
-            c,e=map_point(u,v)
-            line(GOLD,a,b,c,e)
-        for n in range(len(NAMES)):
-            a,b=map_point(*center(n))
-            disc(TRIM[n%4],a,b,3)
-        n=goal(s)
-        if n>=0:
-            a,b=map_point(*center(n))
-            disc(GOLD,a,b,6)
-        a,b=map_point(s['cx'],s['cz'])
-        box(PINK,a-2,b-2,5,5)
-        a,b=map_point(s['x'],s['z'])
-        disc(MILK,a,b,3)
         a,b=map_point(*center(pin))
-        color(MINT)
-        draw.draw_circle(a,b,8)
-        label(MILK,10,179,NAMES[pin]+" / "+SIGNS[pin])
+        box(INK,0,42,320,5)
+        box(INK,308,47,12,118)
+        box(MINT,a-2,43,5,4)
+        box(MINT,309,max(47,min(160,b-2)),8,5)
+        box(INK,0,165,320,18)
+        label(MILK,10,180,NAMES[pin]+" / "+SIGNS[pin])
         k=keywait((UP,DOWN,LEFT,RIGHT,MAP,OK,EXIT))
         if k in (MAP,EXIT): return
         if k==OK:

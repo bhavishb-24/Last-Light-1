@@ -1,5 +1,10 @@
 # Coastline Evo Open World changes
 
+## INPUT V25
+
+- Atlas draws once per opening. Edge ticks and the district label show the cursor while browsing.
+- Small turns on foot can update just the lower HUD. The 3D camera catches up after about 34 degrees of accumulated turning or on the next movement. Driving still follows every turn.
+
 ## INPUT V24
 
 - Restores V21 Fast 3D detail while keeping the V23 HUD and GPS.

@@ -17,7 +17,7 @@ def boot_clip():
 
 clip_played=boot_clip()
 gc.collect()
-from EVOVIEW import render,traffic
+from EVOVIEW import render,traffic,hud
 gc.collect()
 from EVODATA import *
 gc.collect()
@@ -289,18 +289,27 @@ def play():
     s["detail"],s["turn"],perspective=settings
     previous=None
     cockpit=False
+    camera_angle=0
+    small_turn=False
     controls=(UP,DOWN,LEFT,RIGHT,OK,MAP,EXIT,31,23,14)
     while get_key(0)==OK:
         pass
     while True:
         if perspective:
-            previous=render(s,cockpit,previous)
+            angle=s['angle']
+            difference=abs((angle-camera_angle+TAU/2)%TAU-TAU/2)
+            if previous is not None and small_turn and difference<.60:
+                previous=hud(s,previous)
+            else:
+                previous=render(s,cockpit,previous)
+                camera_angle=angle
         else:
             from EVOMENU import street_map
             previous=street_map(s,previous)
         k=keywait(controls)
         while get_key(0)==k:
             pass
+        small_turn=k in (LEFT,RIGHT) and not s['drive'] and perspective
         if k==14:
             if perspective and s['drive'] and not cockpit:
                 cockpit=True
