@@ -108,10 +108,12 @@ def follow_wire(s,n):
     index=s['wire']
     line_text=wire_note(index)[1]
     next_stop=WIRE[index+1] if index+1<len(WIRE) else -1
-    if n in (15,13,18):
+    if n in (15,13,18,19):
         from EVOMENU import tune
-        tell("THE RELIEF TAPE",(line_text,"Match all three bands."))
-        bands=(8,0,6) if n==15 else (7,1,8) if n==13 else (6,0,7)
+        landmark={15:"Breakwater relay",13:"East Docks antenna",
+                  18:"Sawgrass field station",19:"Beacon Point tower"}[n]
+        tell(landmark,(line_text,"Match all three bands."))
+        bands=(8,0,6) if n==15 else (7,1,8) if n==13 else (6,0,7) if n==18 else (8,2,7)
         if not tune(bands):
             return
     s['wire']=index+1

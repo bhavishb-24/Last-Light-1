@@ -64,8 +64,9 @@ def face(cam,pts,c):
 def ground(cam,x,z,w,d,c):
     face(cam,((x,0,z),(x+w,0,z),(x+w,0,z+d),(x,0,z+d)),c)
 
-def building(cam,b):
+def building(cam,b,detail=False,night=False):
     x,z,w,d,h,c,trim,n=b
+    near=detail and abs(cam[0]-x)+abs(cam[1]-z)<24
     l,r=x-w,x+w
     a,f=z-d,z+d
     side=l if cam[0]<x else r
@@ -80,7 +81,7 @@ def building(cam,b):
         def panel(left,right,lo,hi,col):
             face(cam,((left,lo,front),(right,lo,front),
                       (right,hi,front),(left,hi,front)),col)
-        panel(l,r,0,h,(100,76,105) if n>=0 else c)
+        panel(l,r,0,h,c)
         panel(l,r,h-0.42,h,trim)
         if n>=0 and front==a:
             panel(x-0.85,x+0.85,0,2.4,INK)
@@ -93,13 +94,20 @@ def building(cam,b):
                 if 0<=sx<=320-10*len(SIGNS[n]) and 18<sy<172:
                     box(INK,sx-2,sy-17,10*len(SIGNS[n])+4,16)
                     label(MILK,sx,sy,SIGNS[n])
+            if near:
+                face(cam,((l,2.9,a),(r,2.9,a),(r,2.5,a-.8),
+                          (l,2.5,a-.8)),trim)
         elif n<0 and x>=165:
             panel(x-.55,x+.55,0,1.9,NIGHT)
             panel(l+.5,x-1,1.2,2.3,SUN)
             panel(x+1,r-.5,1.2,2.3,MILK)
+            if near:
+                ground(cam,x-.8,front-2 if front==a else front,.8,2,STEEL)
         elif n<0:
             for y in range(2,int(h)-1,3):
-                panel(l+.6,r-.6,y,y+.55,STEEL)
+                panel(l+.6,r-.6,y,y+.55,SUN if night and y%2 else STEEL)
+                if near:
+                    panel(x-.18,x+.18,y,y+.55,c)
     if n<0 and x>=165:
         roof=trim if x%2==0 else (94,69,80)
         face(cam,((l-.3,h,a-.3),(x,h+1.2,a-.3),(x,h+1.2,f+.3),(l-.3,h,f+.3)),roof)
@@ -122,9 +130,11 @@ def render(s,first=False):
     haze=((202,115,143),(88,108,136),(176,181,180),(226,147,113))
     box((48,49,87) if night and front==0 else sky[front],0,0,320,35)
     box((91,77,122) if night and front==0 else haze[front],0,35,320,33)
+    if detail and front in (0,3):
+        box((120,88,128) if night else (230,145,147),0,57,320,11)
     sx=int(160+140*sin(1-s['angle']))
     if front in (0,3): disc(MILK if night else SUN,sx,41,10 if night else 15)
-    for j in range(13 if detail else 3):
+    for j in range((5 if night else 13) if detail else 3):
         px=(j*37-int(s['angle']%TAU*320/TAU))%352-16
         h=4+(j*17)%14
         box(NIGHT if night else VIOLET,px,68-h,12+j%5,h)
@@ -187,7 +197,7 @@ def render(s,first=False):
     for j in range(3):
         bx,bz=center((1,5,10)[j])
         bx+=6*sin(s['clock']*0.5+j)
-        add(bx,bz-4,7,j,1)
+        add(bx+1.5*sin(s["clock"]*.7+j),bz-4,7,j,1)
     if 0<=ix<=96 and 0<=iz<=64:
         add(ix+4,iz+4,9,0,1)
         add(ix-4,iz-4,9,1,1)
@@ -207,7 +217,7 @@ def render(s,first=False):
     things.sort()
     for d,k,i,bx,bz,u in reversed(things):
         if k==0:
-            building(cam,building_at(i))
+            building(cam,building_at(i),detail,night)
             continue
         if d<1.5 or (k==4 and s['drive']):
             continue

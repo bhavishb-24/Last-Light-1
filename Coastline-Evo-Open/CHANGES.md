@@ -1,5 +1,13 @@
 # Coastline Evo Open World changes
 
+## INPUT V20
+
+- Nearby Full mode facades add awnings, split windows and country driveways. Storefronts use their building colors. Clear skies gain an extra horizon band in Full, and tower windows glow after dark.
+- Pedestrians shift position as game time advances. Full shows fewer pedestrians at night. The world still redraws in response to input.
+- Five interiors gain scenic windows. Walk two tiles up and three left from the entrance to read the local board with ENTER.
+- Four landmark encounters in The Relief Tape are named on screen. Beacon Point adds a final relay puzzle. Matches are required before the campaign reward.
+- Replace all five Python files. [Roll back to V19](https://github.com/bhavishb-24/Last-Light/raw/76b7ce5/Coastline-Evo-Open.zip).
+
 ## INPUT V19
 
 - The city now has 20 districts and 46 solid building footprints. Downtown has new tall blocks. Cypress Row, Orchard End, Sawgrass and Beacon Point have pitched-roof homes, greenery and quieter roads. The east exit ramp descends toward the new districts.

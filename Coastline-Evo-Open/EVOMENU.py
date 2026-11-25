@@ -199,6 +199,11 @@ def enter_room(s,n):
         box((125,106,94) if country else VIOLET,0,29,320,67)
         box((122,110,92) if country else STEEL,0,96,320,87)
         label(SUN,8,22,VENUES[n])
+        if n in (7,13,15,18,19):
+            box(INK,121,33,78,36)
+            box((87,157,163),124,36,72,30)
+            box(STEEL,124,53,72,13)
+            box(accent,157,36,4,30)
         box(ROAD,91,83,138,19)
         box(accent,91,81,138,4)
         person(158,84,34,accent,0,False)
@@ -211,9 +216,14 @@ def enter_room(s,n):
         box(PINK,138,169,44,4)
         person(65+32*col,104+21*row,34,COATS[s['coat']],col,True)
         label(MILK,7,205,"ENTER counter / CLEAR exit" if row==0 else "ARROWS walk / CLEAR exit")
+        if col==0 and row==1:
+            label(SUN,8,122,"ENTER read local board")
         k=keywait((UP,DOWN,LEFT,RIGHT,OK,EXIT))
         if k==EXIT:
             return False
+        if k==OK and col==0 and row==1:
+            tell("LOCAL BOARD",(NAMES[n],wire_note(WIRE.index(n))[1]
+                 if n in WIRE else "Ask the clerk about the old station."))
         if k==OK and row==0:
             return True
         if k==UP: row=max(0,row-1)
