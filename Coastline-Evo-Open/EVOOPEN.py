@@ -206,12 +206,18 @@ def play():
         tell("WEST QUAY / DUSK",("Mara's station goes silent","at midnight. Her studio is","the WAVE door ahead.","UP starts / DOWN stops.","LEFT and RIGHT turn you."))
     tell("STREET CONTROLS",("ENTER: talk, shop, car, park","2nd: map and district pins","ALPHA: journal / checkpoint","CLEAR: journal and quit","Pink map dot: parked coupe."))
     buffer=[]
+    next_frame=0
     while True:
         start=monotonic()
-        render(s,buffer)
+        if start>=next_frame:
+            render(s,buffer)
+            # Keep polling and advancing the simulation between idle redraws.
+            next_frame=start+(0.15 if s['speed'] or s['heat'] else 0.5)
         k=buffer.pop(0) if buffer else get_key(0)
         while not k and monotonic()-start<0.075:
             k=get_key(0)
+        if k:
+            next_frame=0
         if k in (EXIT,31):
             buffer=[]
             if not journal(s): return
