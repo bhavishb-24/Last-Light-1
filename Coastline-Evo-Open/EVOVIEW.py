@@ -71,12 +71,16 @@ def building(cam,b):
     side=l if cam[0]<x else r
     if cam[0]<l or cam[0]>r:
         face(cam,((side,0,a),(side,0,f),(side,h,f),(side,h,a)),c)
+        if n<0 and h>9 and abs(cam[0]-x)+abs(cam[1]-z)<34:
+            for y in range(3,int(h)-1,3):
+                face(cam,((side,y,a+.6),(side,y,f-.6),
+                          (side,y+.5,f-.6),(side,y+.5,a+.6)),BLUE)
     if cam[1]<a or cam[1]>f:
         front=a if cam[1]<a else f
         def panel(left,right,lo,hi,col):
             face(cam,((left,lo,front),(right,lo,front),
                       (right,hi,front),(left,hi,front)),col)
-        panel(l,r,0,h,(100,76,105) if n>=0 else VIOLET)
+        panel(l,r,0,h,(100,76,105) if n>=0 else c)
         panel(l,r,h-0.42,h,trim)
         if n>=0 and front==a:
             panel(x-0.85,x+0.85,0,2.4,INK)
@@ -89,16 +93,28 @@ def building(cam,b):
                 if 0<=sx<=320-10*len(SIGNS[n]) and 18<sy<172:
                     box(INK,sx-2,sy-17,10*len(SIGNS[n])+4,16)
                     label(MILK,sx,sy,SIGNS[n])
+        elif n<0 and x>=165:
+            panel(x-.55,x+.55,0,1.9,NIGHT)
+            panel(l+.5,x-1,1.2,2.3,SUN)
+            panel(x+1,r-.5,1.2,2.3,MILK)
         elif n<0:
             for y in range(2,int(h)-1,3):
-                panel(l+0.6,r-0.6,y,y+0.45,STEEL)
+                panel(l+.6,r-.6,y,y+.55,STEEL)
+    if n<0 and x>=165:
+        roof=trim if x%2==0 else (94,69,80)
+        face(cam,((l-.3,h,a-.3),(x,h+1.2,a-.3),(x,h+1.2,f+.3),(l-.3,h,f+.3)),roof)
+        face(cam,((x,h+1.2,a-.3),(r+.3,h,a-.3),(r+.3,h,f+.3),(x,h+1.2,f+.3)),roof)
+        edge=a if cam[1]<z else f
+        face(cam,((l,h,edge),(r,h,edge),(x,h+1.2,edge)),roof)
     if h<cam[4]:
         face(cam,((l,h,a),(r,h,a),(r,h,f),(l,h,f)),c)
 
-def render(s):
+def render(s,first=False):
     x,z=s['x'],s['z']
     f,c=sin(s['angle']),cos(s['angle'])
-    cam=(x-6*f,z-6*c,f,c,3.4+road_height(x,z))
+    first=first and s['drive']
+    distance=-1.15 if first else 6
+    cam=(x-distance*f,z-distance*c,f,c,(2.05 if first else 3.4)+road_height(x,z))
     detail=s['detail']
     night=int(s['clock']//90)%2
     front=weather(s)
@@ -116,7 +132,12 @@ def render(s):
     box((54,99,132),0,68,320,120)
     for j in range(3 if detail else 0):
         box((110,151,166),j*94+14,72+j*3,32-j*4,1)
-    ground(cam,-10,-10,186,88,TILE)
+    ground(cam,-10,-10,250,88,TILE)
+    if x>132:
+        ground(cam,170,-10,70,88,(107,147,101))
+        if detail:
+            ground(cam,198,44,42,34,(134,160,99))
+            ground(cam,197,-10,43,29,(117,151,113))
     # Continuous road network and sidewalks.
     if detail:
         for i in range(4):
@@ -126,15 +147,10 @@ def render(s):
         for i in range(3):
             a=i*32
             if abs(z-a)<48:
-                ground(cam,-10,a-4.5,186,9,WALK)
-    for i in range(4):
-        a=i*32
-        if abs(x-a)<48:
-            ground(cam,a-3,-10,6,88,ASPHALT)
-    for i in range(3):
-        a=i*32
-        if abs(z-a)<48:
-            ground(cam,-10,a-3,186 if i==1 else 122,6,ASPHALT)
+                ground(cam,-10,a-4.5,122,9,WALK)
+    for a,b,w,d in STREETS:
+        if a-48<x<a+w+48 and b-48<z<b+d+48:
+            ground(cam,a,b,w,d,ASPHALT)
     if x>80:
         overpass(cam,z)
     # Short paint dashes mark the closest avenues.
@@ -143,7 +159,7 @@ def render(s):
     for off in (-16,-8,0,8,16):
         if -8<=iz+off<=74 and 0<=ix<=96 and off:
             ground(cam,ix-.14,iz+off-.9,.28,2.6,SUN)
-        if -8<=ix+off<=108 and 0<=iz<=64 and off:
+        if -8<=ix+off<=(236 if iz==32 else 108) and 0<=iz<=64 and off:
             ground(cam,ix+off-.9,iz-.14,2.6,.28,SUN)
     if 0<=ix<=96 and 0<=iz<=64:
         for stripe in (-2,0,2):
@@ -154,8 +170,8 @@ def render(s):
         u,d=uv(cam,bx,bz)
         if -r<d<far and abs(u)<1.4*max(0,d)+r:
             things.append((d,kind,i,bx,bz,u))
-    for i in range(len(BLOCKS)):
-        b=BLOCKS[i]
+    for i in range(BUILDINGS):
+        b=building_at(i)
         add(b[0],b[1],0,i,8)
     for i in range(len(NAMES)):
         bx,bz=door(i)
@@ -175,6 +191,9 @@ def render(s):
     if 0<=ix<=96 and 0<=iz<=64:
         add(ix+4,iz+4,9,0,1)
         add(ix-4,iz-4,9,1,1)
+    if x>155:
+        for u,v in ((174,51),(183,70),(201,46),(202,5),(217,48),(233,18)):
+            add(u,v,11,0,2)
     if x>78:
         for i,ramp in enumerate(RAMPS):
             add(ramp[0]-4,ramp[1]+3,10,i,2)
@@ -188,14 +207,20 @@ def render(s):
     things.sort()
     for d,k,i,bx,bz,u in reversed(things):
         if k==0:
-            building(cam,BLOCKS[i])
+            building(cam,building_at(i))
             continue
         if d<1.5 or (k==4 and s['drive']):
             continue
         px=int(160+121*u/d)
         py=int(68+121*(cam[4]-road_height(bx,bz))/d)
         h=max(5,int(245/d))
-        if k==10:
+        if k==11:
+            box((105,77,56),px-1,py-h//2,2,h//2)
+            poly((49,99,75),[px-h//4,px,px+h//4],
+                 [py-h//3,py-h,py-h//3])
+            poly((85,127,78),[px-h//5,px,px+h//5],
+                 [py-h//2,py-h,py-h//2])
+        elif k==10:
             title=("NORTHGATE","EAST DOCKS","SOUTHBANK")[i]
             if 60<px<260 and 34<py-h<166:
                 box(STEEL,px-1,py-h,2,h)
@@ -227,7 +252,13 @@ def render(s):
             if abs(sin(angle-s['angle']))>0.66:
                 sidecar(px,py,max(4,int(390/d)),tint)
             else: car(px,py,int(330/d),tint,False)
-    if s['drive']:
+    if first:
+        hood=PAINT[s['paint']]
+        poly(hood,[0,65,255,319],[166,138,138,166])
+        poly(ROAD,[0,43,276,319],[166,155,155,166])
+        box(MILK,134,142,51,2)
+        label(MILK,6,164,"CAB  "+str(int(abs(s['speed']))))
+    elif s['drive']:
         car(160,142,67,PAINT[s['paint']],detail)
     else:
         from EVOSPORT import lead
@@ -255,9 +286,9 @@ def render(s):
     if s['heat']>0: label(PINK,228,186,'ALERT '+str(int(s['heat'])))
     k,i=closest(s)
     hint="2nd map / ALPHA journal"
-    if s['drive']: hint="ENTER park / arrows drive"
+    if s['drive']: hint="ENTER park / TRACE view"
     elif k=='door':
-        hint="ENTER "+VENUES[i]
+        hint="ENTER inside / "+SIGNS[i]
         if i==7 and s['stage']!=1: hint="ENTER fish at Sun Pier"
         if i==0 and s['stage']>0: hint="ENTER safehouse / rest"
         if i==9 and s['stage']!=4: hint="ENTER play pool"
@@ -276,6 +307,10 @@ def overpass(cam,z):
     for edge in (139.55,148.25):
         face(cam,((edge,4.03,-8),(edge+.2,4.03,-8),
                   (edge+.2,4.03,76),(edge,4.03,76)),MILK)
+    if abs(z-32)<48:
+        face(cam,((149,4,29),(174,0,29),(174,0,35),(149,4,35)),ASPHALT)
+        face(cam,((149,4.03,32),(174,.03,32),(174,.03,32.28),
+                  (149,4.03,32.28)),SUN)
     for a,b,u,v in RAMPS:
         if abs(z-b)<48:
             face(cam,((a,0,b-3),(u,4,v-3),(u,4,v+3),(a,0,b+3)),ASPHALT)

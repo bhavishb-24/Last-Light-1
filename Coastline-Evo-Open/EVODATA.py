@@ -19,7 +19,8 @@ RED=(224,68,90)
 NAMES=("West Quay","Glasshouse","FM Tower","Marina",
        "Kiln Yard","Lantern Sq","Arcade","Sun Pier",
        "Foundry","Velvet Club","Palms","The Lido",
-       "Northgate","East Docks","Southbank","Breakwater")
+       "Northgate","East Docks","Southbank","Breakwater",
+       "Cypress Row","Orchard End","Sawgrass","Beacon Point")
 def color(c):
     draw.set_color(c[0],c[1],c[2])
 
@@ -125,14 +126,46 @@ COATS=(BLUE,PINK,MINT)
 TRIM=(MINT,SUN,PINK,BLUE)
 SIGNS=("WAVE","PARTS","FM 84","SLIP","POST","THREAD",
        "PIXEL","PIER","PAINT","VELVET","PALMS","LIDO",
-       "NORTH","DOCK","SOUTH","POINT")
+       "NORTH","DOCK","SOUTH","POINT",
+       "CYPRESS","ORCHARD","RANGER","BEACON")
 VENUES=("Mara's studio","Glasshouse Supply","FM transmitter","Marina slips",
         "City Dispatch","Thread Dept.","Pixel Palace","Pier booth",
         "Foundry Customs","Velvet Club","Palm Garden","Lido Rally",
-        "Northgate overlook","East Docks office","Southbank service","Breakwater lookout")
+        "Northgate overlook","East Docks office","Southbank service","Breakwater lookout",
+        "Cypress cafe","Orchard market","Sawgrass station","Beacon visitor center")
 GOALS=(0,7,1,2,6,-1,-1)
 TASK=("Meet Mara at West Quay","Interview Ivo at Sun Pier","Buy a valve at Glasshouse",
       "Tune the tower transmitter","Arcade: air it / Club: dub it","City broadcast is live","Archive tape is safe")
+# District, objective title, counter dialogue. The opening covers 1, 2 and 7.
+WIRE=(0, 4, 5, 8, 11, 14, 17, 19, 15, 13, 16, 12, 18, 10, 3, 9, 6, 0)
+WIRE_NOTES="""Pick up the case at WAVE|A second tape names a relief scam.
+Collect dispatch slips|These routes share a fake sender.
+Ask Thread about the order|Uniforms were paid for in cash.
+Match the paint at Foundry|Same paint on every missing van.
+Read the Lido entry ledger|One van entered under a false plate.
+Check the Southbank service bay|The plate points to a farm pickup.
+Get the Orchard sales receipt|The driver paid with relief vouchers.
+Read the Beacon visitor log|The van stopped below the lighthouse.
+Find the Breakwater receiver|Unlock the coastal receiver.
+Verify the dock manifest|Decode three bands to open the log.
+Meet the witness at Cypress|The dock crew kept a backup copy.
+Get the Northgate camera log|The highway camera confirms the van.
+Recover the ranger's letter|Tune the ranger relay for the letter.
+Collect proof from Palm Garden|Here is the survey map you need.
+Get the last slip at the Marina|The manifest matches the slips.
+Retrieve Velvet's backup tape|The dub will protect our witness.
+Check the original at Arcade|Two copies. Same voice. Same deal.
+Return the evidence to WAVE|We can air the relief case tonight.
+"""
+
+def wire_note(index):
+    start=0
+    for _ in range(index):
+        start=WIRE_NOTES.find("\n",start)+1
+    separator=WIRE_NOTES.find("|",start)
+    end=WIRE_NOTES.find("\n",separator)
+    return WIRE_NOTES[start:separator],WIRE_NOTES[separator+1:end]
+
 RECORDS=((-5,38),(67,58),(91,-5))
 GATES=(10,6,7,11)
 SKIN=(212,145,104)
@@ -142,6 +175,10 @@ TILE=(95,123,128)
 TAU=6.2831853
 
 RAMPS=((112,64,139,51),(112,32,139,32),(112,0,139,-6))
+# Rectangular streets also drive the 2D atlas. World x, z, width, length.
+STREETS=((-3,-10,6,88),(29,-10,6,88),(61,-10,6,88),(93,-10,6,88),
+         (-10,-3,122,6),(-10,29,250,6),(-10,61,122,6),
+         (185,-10,6,88),(222,19,4,53),(175,-2,48,4),(183,62,53,4))
 
 def highway(x,z):
     return abs(x-144)<=5 and -8<z<76
@@ -149,6 +186,8 @@ def highway(x,z):
 def road_height(x,z):
     if highway(x,z):
         return 4
+    if 149<x<174 and abs(z-32)<3:
+        return (174-x)*.16
     if 112<x<139:
         t=(x-112)/27
         for a,b,u,v in RAMPS:
@@ -158,7 +197,8 @@ def road_height(x,z):
 
 def center(n):
     if n>=12:
-        return ((124,64),(128,32),(124,0),(160,32))[n-12]
+        return ((124,64),(128,32),(124,0),(160,32),
+                (188,64),(192,32),(188,0),(224,32))[n-12]
     return (32*(n%4),32*(2-n//4))
 
 def door(n):
@@ -166,6 +206,10 @@ def door(n):
     return x+8,z+5
 
 def district(x,z):
+    if x>=210:
+        return 19
+    if x>=176:
+        return 16 if z>=48 else (18 if z<16 else 17)
     if x>=150:
         return 15
     if x>=112:
@@ -177,27 +221,46 @@ def district(x,z):
 def near(x,z,u,v,r):
     return (x-u)*(x-u)+(z-v)*(z-v)<=r*r
 
-# x,z half-width, half-depth, height, facade color, trim, shop index.
-BLOCKS=[]
-for n in range(len(NAMES)):
-    x,z=door(n)
-    BLOCKS.append((x,z+3.9,3.8,3,3.7+n%3, (NIGHT,VIOLET,STEEL)[n%3],TRIM[n%4],n))
-for n in range(6):
-    x=16+32*(n%3)
-    z=16+32*(n//3)
-    BLOCKS.append((x,z,4.8,4.4,7+n%4*2,NIGHT,STEEL,-1))
+# Packed x/z, quarter-unit footprints, height and facade.
+LOTS=(
+    b'\x1a\x1a\x13\x12\x07\x06:\x1a\x13\x12\t\x06Z\x1a\x13\x12\x0b\x06\x1a:\x13\x12\r\x06'
+    b'::\x13\x12\x07\x06Z:\x13\x12\t\x06\x05@\x08\x10\x1a\x08\x15=\x10\x14&\t'
+    b'\x1eE\x0c\x08\x1a\n3A\x10\x10 \n;D\x0c\x0c$\x08D<\x0c\x10\x1c\t'
+    b"\x1b'\x14\x07\x16\n5!\x10\x10\x18\x08R@\x10\x14\x14\ta;\x10\x14\x10\n"
+    b'\x1b\x15\x10\x0c\x0c\n| \x0c\x0c\n\t\xb3\x17\x0c\x0c\x08\x0b\xc0@\x0c\x0c\x07\x0c'
+    b'\xd5@\x10\x0c\t\r\xbf\x1c\x0e\x0c\x08\r\xd7\x1b\x10\n\x08\x0b\xe5C\x10\x10\x08\x0c'
+    b'\xe3\x18\x0f\x0c\x07\x0c\xf4E\x0c\x0c\t\r'
+)
+FACADES=((64,113,145),(80,119,123),(132,101,129),(185,131,109),
+         (148,174,149),(196,175,128))
+BUILDINGS=len(NAMES)+len(LOTS)//6
+
+def building_at(n):
+    if n<len(NAMES):
+        x,z=door(n)
+        return (x,z+3.9,3.8,3,3.7+n%3,(NIGHT,VIOLET,STEEL)[n%3],TRIM[n%4],n)
+    j=(n-len(NAMES))*6
+    style=LOTS[j+5]
+    c=FACADES[style-8] if style>=8 else NIGHT
+    height=LOTS[j+4]*.5 if style>=8 else LOTS[j+4]
+    return (LOTS[j]-10,LOTS[j+1]-10,LOTS[j+2]*.25,LOTS[j+3]*.25,height,c,
+            TRIM[style%4] if style>=8 else STEEL,-1)
 
 def blocked(x,z,r):
-    if x< -10 or x>176 or z< -10 or z>78:
+    if x< -10 or x>240 or z< -10 or z>78:
         return True
-    for bx,bz,w,d,h,c,t,n in BLOCKS:
-        if abs(x-bx)<w+r and abs(z-bz)<d+r:
+    for n in range(len(NAMES)):
+        u,v=door(n)
+        if abs(x-u)<3.8+r and abs(z-v-3.9)<3+r:
+            return True
+    for j in range(0,len(LOTS),6):
+        if abs(x+10-LOTS[j])<LOTS[j+2]*.25+r and abs(z+10-LOTS[j+1])<LOTS[j+3]*.25+r:
             return True
     return False
 
 def fresh():
     return dict(x=7.0,z=65.0,angle=0.0,cx=3.0,cz=64.0,
-                pin=-1,detail=False,drive=False,speed=0,stage=0,cash=25,bank=0,coat=0,paint=0,
+                pin=-1,detail=False,drive=False,speed=0,stage=0,cash=25,bank=0,wire=0,coat=0,paint=0,
                 shoes=0,records=0,job=0,race=-1,timer=0.0,clock=0.0,
                 fine=0.0,heat=0.0,px=0.0,pz=0.0,parkangle=0.0,stride=0.0,msg="",ttl=0)
 
@@ -221,9 +284,20 @@ def passcode(s):
         v=v*base+s[key]
     code=str(v)+str(v%7)
     bank=s['bank']
-    return code+(".%03d%d"%(bank,bank%7) if bank else "")
+    if bank:
+        code+=".%03d%d"%(bank,bank%7)
+    wire=s['wire']
+    return code+("/%02d%d"%(wire,wire%7) if wire else "")
 
 def restore(code):
+    wire=0
+    if "/" in code:
+        code,_,saved=code.partition("/")
+        if len(saved)!=3 or not saved.isdigit():
+            return None
+        wire=int(saved[:2])
+        if wire>len(WIRE) or wire%7!=int(saved[2]):
+            return None
     bank=0
     if "." in code:
         code,_,saved=code.partition(".")
@@ -243,7 +317,9 @@ def restore(code):
         v//=base
     if v>=len(NAMES):
         return None
-    s['bank']=bank
+    if wire and s['stage']<5:
+        return None
+    s['bank'],s['wire']=bank,wire
     x,z=center(v)
     s['x'],s['z']=x+7,z+1
     s['cx'],s['cz']=x+3,z
@@ -292,6 +368,8 @@ def goal(s):
         return GATES[s['race']]
     if s['job']:
         return s['job']-1
+    if s['stage']>=5 and s['wire']<len(WIRE):
+        return WIRE[s['wire']]
     return GOALS[s['stage']]
 
 def gps(s):

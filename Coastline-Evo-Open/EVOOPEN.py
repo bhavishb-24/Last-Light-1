@@ -17,12 +17,12 @@ def boot_clip():
 
 clip_played=boot_clip()
 gc.collect()
+from EVOVIEW import render,traffic
+gc.collect()
 from EVODATA import *
 gc.collect()
-from EVOVIEW import *
-gc.collect()
-from EVOMENU import *
 def venue(s,n):
+    from EVOMENU import shop,tune,safehouse
     t=s['stage']
     if s['job']==n+1:
         earn(s,45)
@@ -30,7 +30,7 @@ def venue(s,n):
         tell("PARCEL SIGNED  +$45",("The night clerk signs for it.","Dispatch has more work."))
         return
     if n==0 and t==0:
-        tell("MARA / DEAD AIR",("They sold our frequency.","Ivo has a recording of it.","Find the PIER sign at Sun Pier.","Park, walk to it, press ENTER."))
+        tell("MARA / DEAD AIR",("They sold our frequency.","Ivo has a recording of it.","Find the PIER sign at Sun Pier.","Park and use the PIER counter."))
         s['stage']=1
     elif n==7 and t==1:
         tell("IVO / THE PIER TAPE",("Mara's brother signed the deal.","Take $30 for a signal valve.","Go to PARTS in Glasshouse.","Buy the valve for $20."))
@@ -48,6 +48,8 @@ def venue(s,n):
              ("Every radio hears the deal." if public else "A filtered voice hits the air.",
               "Mara lets the tape roll." if public else "Her brother stays anonymous.",
               "The station stays on air.","+$90 / City stays open."))
+    elif t>=5 and s['wire']<len(WIRE) and n==WIRE[s['wire']]:
+        follow_wire(s,n)
     elif n==0:
         safehouse(s)
     elif n==1:
@@ -102,6 +104,28 @@ def venue(s,n):
                  "Fresh paint dries fast.","This room has good acoustics.","The palms hide old records.","Listen for the starting bell.")
         tell(VENUES[n],(chatter[n],TASK[t]))
 
+def follow_wire(s,n):
+    index=s['wire']
+    line_text=wire_note(index)[1]
+    next_stop=WIRE[index+1] if index+1<len(WIRE) else -1
+    if n in (15,13,18):
+        from EVOMENU import tune
+        tell("THE RELIEF TAPE",(line_text,"Match all three bands."))
+        bands=(8,0,6) if n==15 else (7,1,8) if n==13 else (6,0,7)
+        if not tune(bands):
+            return
+    s['wire']=index+1
+    s['pin']=-1
+    earn(s,8 if next_stop>=0 else 150)
+    if next_stop>=0:
+        tell("THE RELIEF TAPE",(line_text,"Next: "+NAMES[next_stop],
+                              "Use the "+SIGNS[next_stop]+" counter."))
+        notice(s,"Evidence filed / $8")
+    else:
+        tell("THE RELIEF TAPE / COMPLETE",("Mara airs the evidence in full.",
+             "The stolen relief fund is traced.","Campaign complete / Bonus $150."))
+        notice(s,"Campaign complete")
+
 def interact(s):
     x,z=s['x'],s['z']
     s['speed']=0
@@ -121,7 +145,9 @@ def interact(s):
         s['angle']=s['parkangle']
         notice(s,'UP gas / DOWN brake or back')
     elif k=='door':
-        venue(s,n)
+        from EVOMENU import enter_room
+        if enter_room(s,n):
+            venue(s,n)
     elif k=='local':
         lines=(("Ivo kept every pier show.","Look for the gold dot."),("The Foundry does gold flake.","Dispatch pays for the paint."),("Start the rally at the Lido.","Gold hoops mark each gate."))
         tell(("ANA / TECH","KIT / RUNNER","RED / DRIVER")[n],lines[n])
@@ -218,10 +244,18 @@ def journal(s):
     title=ending[s['stage']-5] if s['stage']>=5 else "DEAD AIR / STORY"
     job=NAMES[s['job']-1] if s['job'] else "Visit Kiln Yard"
     count=sum((s['records']>>i)&1 for i in range(3))
+    objective,help_line=TASK[s['stage']],STORY_HELP[s['stage']]
+    if s['stage']>=5 and s['wire']<len(WIRE):
+        n=WIRE[s['wire']]
+        objective=wire_note(s['wire'])[0]
+        title="RELIEF TAPE %02d / %02d"%(s['wire']+1,len(WIRE))
+        help_line="Counter at "+SIGNS[n]+" / "+NAMES[n]
+    elif s['stage']>=5:
+        title="CAMPAIGN COMPLETE"
     while True:
         mode="Full" if s['detail'] else "Fast"
         turn=("Fine","Normal","Sharp")[s.get("turn",1)]
-        sheet(title,(TASK[s['stage']],STORY_HELP[s['stage']],"Parcel: "+job,"Records "+str(count)+"/3 | 2nd "+mode,
+        sheet(title,(objective,help_line,"Parcel: "+job,"Records "+str(count)+"/3 | 2nd "+mode,
                      "Checkpoint: "+passcode(s),"RIGHT turning: "+turn),
                      "ENTER back / CLEAR quit")
         k=keywait((OK,EXIT,MAP,RIGHT))
@@ -248,35 +282,45 @@ def play():
             print("Check the digits and retry.")
         draw.clear()
     else:
-        tell("WEST QUAY / DUSK",("Mara's station goes silent","at midnight. Her studio is","the WAVE door ahead.","Tap or hold UP to move.","DOWN brakes / backs up."))
+        tell("WEST QUAY / DUSK",("Mara's station goes silent","at midnight. Her studio is","the WAVE door ahead.","Enter the WAVE door.","Walk UP to the counter."))
     tell("STREET CONTROLS",("ENTER: talk, shop, car, park","2nd: map and district pins","ALPHA: journal / checkpoint","CLEAR: journal and quit","DEL: phone and taxi"))
     s["detail"],s["turn"],perspective=settings
     previous=None
+    cockpit=False
     controls=(UP,DOWN,LEFT,RIGHT,OK,MAP,EXIT,31,23,14)
     while get_key(0)==OK:
         pass
     while True:
         if perspective:
-            render(s)
+            render(s,cockpit)
         else:
+            from EVOMENU import street_map
             previous=street_map(s,previous)
         k=keywait(controls)
         while get_key(0)==k:
             pass
         if k==14:
-            perspective=not perspective
+            if perspective and s['drive'] and not cockpit:
+                cockpit=True
+            else:
+                perspective=not perspective
+                cockpit=False
             previous=None
         elif k in (EXIT,31):
             if not journal(s): return
             previous=None
         elif k==23:
+            from EVOMENU import phone
             phone(s)
             previous=None
         elif k==MAP:
+            from EVOMENU import atlas
             atlas(s)
             previous=None
         elif k==OK:
             interact(s)
+            if not s['drive']:
+                cockpit=False
             previous=None
         else:
             # Advance once per key so movement stays matched to the picture.

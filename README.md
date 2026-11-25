@@ -1,6 +1,6 @@
 # Last Light / Coastline
 
-Explore a 16-district city on your TI-84 Evo. Walk, drive the expressway, follow the story, and visit shops, the gym, or the pier.
+Explore 20 districts on your TI-84 Evo. Walk into venues, drive the expressway in first person, and follow a story that takes you from downtown to the countryside.
 
 ## Install on your TI-84 Evo
 
@@ -10,7 +10,7 @@ Explore a 16-district city on your TI-84 Evo. Walk, drive the expressway, follow
 
 The faster intro pack shows all nine fullscreen frames in order and finishes each frame before advancing. A slower calculator may take longer than 20 seconds. The intro has no on-screen prompts.
 
-Updating from V17? Replace EVOVIEW.py and EVOSPORT.py. The title will show INPUT V18.
+For V19, replace all five game files. Older checkpoint codes work. If you plan to roll back later, keep a copy of your pre-V19 checkpoint.
 
 [Version notes and rollback links](Coastline-Evo-Open/CHANGES.md) · [Current Python source](Coastline-Evo-Open/)
 

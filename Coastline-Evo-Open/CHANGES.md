@@ -1,5 +1,14 @@
 # Coastline Evo Open World changes
 
+## INPUT V19
+
+- The city now has 20 districts and 46 solid building footprints. Downtown has new tall blocks. Cypress Row, Orchard End, Sawgrass and Beacon Point have pitched-roof homes, greenery and quieter roads. The east exit ramp descends toward the new districts.
+- All 20 marked venues have a walkable 2D interior. Press ENTER at the door, take three steps UP, then press ENTER at the counter. CLEAR leaves the room. Story triggers take priority at their destination.
+- In a car, TRACE cycles chase view, first-person cockpit and top-down. On foot, TRACE switches between the original 3D and top-down views.
+- Both Dead Air endings lead into The Relief Tape. Its 18 counter objectives, including three relay puzzles, complete a campaign route through every district. Check ALPHA for the next objective.
+- Replace all five Python files. Old checkpoint codes load in V19. V19 codes with a slash suffix or a position in a new district require V19. The optional fullscreen intro pack works with V19.
+- [Roll back to V18](https://github.com/bhavishb-24/Last-Light/raw/67fbe10/Coastline-Evo-Open.zip). Use a pre-V19 checkpoint for rollback.
+
 ## INPUT V18
 
 - Lena and Sol have distinct original sprites in the title menu and on foot. Lena has a tied-back silhouette and plum streetwear. Sol has a broad silhouette, short hair and pale coastal streetwear. Walking animates the legs and hands.

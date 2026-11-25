@@ -1,34 +1,59 @@
 from EVODATA import *
-from EVOVIEW import *
+from EVOVIEW import person,arrow
+def map_point(x,z):
+    return int(21+x*1.16),int(148-z*1.35)
+
+def map_surface(left,top,right,bottom):
+    box(INK,left,top,right-left,bottom-top)
+    for i,(x,z,w,d) in enumerate(STREETS+((139,-8,10,84),)):
+        a,b=map_point(x,z+d)
+        u,v=map_point(x+w,z)
+        a,b=max(a,left),max(b,top)
+        u,v=min(u,right),min(v,bottom)
+        if u>a and v>b:
+            box((125,104,89) if i==len(STREETS) else ROAD,a,b,u-a,v-b)
+
+def next_district(pin,key):
+    x,z=center(pin)
+    dx,dz=((1,0) if key==RIGHT else (-1,0) if key==LEFT else
+           (0,1) if key==UP else (0,-1))
+    choice=pin
+    best=1000
+    for n in range(len(NAMES)):
+        u,v=center(n)
+        across=abs((u-x)*dz-(v-z)*dx)
+        forward=(u-x)*dx+(v-z)*dz
+        cost=forward+across*3
+        if forward>0 and across<=forward and cost<best:
+            choice,best=n,cost
+    return choice
+
 def atlas(s):
     pin=district(s['x'],s['z'])
     while True:
         sheet("CITY ATLAS    N ^",(),"Arrows browse / ENTER pin")
-        def dotpos(x,z):
-            return (int(31+x*1.52),int(141-z*1.20))
-        for i in range(4):
-            a,b=dotpos(i*32,64)
-            line(STEEL,a,b,a,141)
-        for i in range(3):
-            a,b=dotpos(0,i*32)
-            line(STEEL,a,b,295 if i==1 else 222,b)
-        line(GOLD,250,53,250,153)
+        map_surface(0,44,320,165)
+        for i in range(BUILDINGS):
+            x,z,w,h,_,_,_,venue=building_at(i)
+            a,b=map_point(x-w,z+h)
+            u,v=map_point(x+w,z-h)
+            box(VIOLET if venue>=0 else (70,79,88),a,b,max(1,u-a),max(1,v-b))
         for x,z,u,v in RAMPS:
-            a,b=dotpos(x,z)
-            c,e=dotpos(u,v)
+            a,b=map_point(x,z)
+            c,e=map_point(u,v)
             line(GOLD,a,b,c,e)
         for n in range(len(NAMES)):
-            a,b=dotpos(*center(n))
+            a,b=map_point(*center(n))
             disc(TRIM[n%4],a,b,3)
         n=goal(s)
         if n>=0:
-            a,b=dotpos(*center(n))
+            a,b=map_point(*center(n))
             disc(GOLD,a,b,6)
-        a,b=dotpos(s['cx'],s['cz'])
+        a,b=map_point(s['cx'],s['cz'])
         box(PINK,a-2,b-2,5,5)
-        a,b=dotpos(s['x'],s['z'])
+        a,b=map_point(s['x'],s['z'])
         disc(MILK,a,b,3)
-        a,b=dotpos(*center(pin))
+        a,b=map_point(*center(pin))
         color(MINT)
         draw.draw_circle(a,b,8)
         label(MILK,10,179,NAMES[pin]+" / "+SIGNS[pin])
@@ -38,20 +63,7 @@ def atlas(s):
             s['pin']=pin
             notice(s,'Pinned '+NAMES[pin])
             return
-        if k==LEFT and pin>=12:
-            pin=(3,7,11,13)[pin-12]
-        elif k==LEFT and pin%4: pin-=1
-        if k==RIGHT:
-            if pin in (3,7,11):
-                pin=12+pin//4
-            elif pin==13:
-                pin=15
-            elif pin<12 and pin%4<3:
-                pin+=1
-        if k==UP and 4<=pin<12: pin-=4
-        elif k==UP and pin in (13,14): pin-=1
-        if k==DOWN and pin<8: pin+=4
-        elif k==DOWN and pin in (12,13): pin+=1
+        pin=next_district(pin,k)
 
 def shop(s,title,items):
     i=0
@@ -90,11 +102,11 @@ def shop(s,title,items):
         else:
             info="Need more cash: try Dispatch"
 
-def tune():
+def tune(bands=(5,2,7)):
     position=1
     locks=0
     while locks<3:
-        target=(5,2,7)[locks]
+        target=bands[locks]
         sheet("FM / ALIGN BAND "+str(locks+1),("Match mint to gold.",),"L/R tune / ENTER lock")
         for i in range(9):
             box(GOLD if i==target else STEEL,25+32*i,96,4,16)
@@ -160,39 +172,54 @@ def taxi(s):
 
 
 def street_map(s,previous):
-    x=int(30+s['x']*1.52)
-    y=int(148-s['z']*1.45)
+    x,y=map_point(s['x'],s['z'])
     if previous is None:
         box(INK,0,0,320,210)
-        for n in range(12):
-            px=(30,78,127,175)[n%4]
-            py=(55,101,148)[n//4]
-            box(ROAD,px-3,py-3,7,7)
-            if n%4<3:
-                box(ROAD,px,py-3,(48,49,48)[n%4],7)
-            if n<8:
-                box(ROAD,px-3,py,7,(46,47)[n//4])
-        box(ROAD,175,98,123,7)
-        box(ROAD,246,38,7,123)
+        map_surface(0,34,320,170)
         box(NIGHT,0,171,320,39)
         label(MINT,5,206,"2nd map / DEL phone / TRACE 3D")
     elif previous[:2]!=(x,y):
         px,py=previous[:2]
-        box(INK,px-1,py-1,3,3)
-        for a in range(px-1,px+2):
-            for b in range(py-1,py+2):
-                if (27<=a<=178 and min(abs(b-55),abs(b-101),abs(b-148))<=3) or (52<=b<=151 and min(abs(a-30),abs(a-78),abs(a-127),abs(a-175))<=3):
-                    box(ROAD,a,b,1,1)
-                if (175<=a<298 and 98<=b<105) or (246<=a<253 and 38<=b<161):
-                    box(ROAD,a,b,1,1)
+        map_surface(px-1,py-1,px+2,py+2)
     status=(district(s['x'],s['z']),s['cash'],s['drive'],gps(s))
     if previous is None or previous[:2]!=(x,y) or previous[2][2]!=s['drive']:
         box(GOLD if s['drive'] else MINT,x-1,y-1,3,3)
     if previous is None or previous[2]!=status:
         box(NIGHT,0,171,320,22)
-        label(MILK,5,190,NAMES[status[0]]+" $"+str(s['cash'])+" "+status[3])
+        label(MILK,5,190,(NAMES[status[0]]+" $"+str(s['cash'])+" "+status[3])[:31])
     return x,y,status
 
+def enter_room(s,n):
+    # Position is local to the room. Leaving returns to the same street door.
+    col,row=3,3
+    accent=TRIM[n%4]
+    country=n>=16
+    while True:
+        box(NIGHT,0,0,320,210)
+        box((125,106,94) if country else VIOLET,0,29,320,67)
+        box((122,110,92) if country else STEEL,0,96,320,87)
+        label(SUN,8,22,VENUES[n])
+        box(ROAD,91,83,138,19)
+        box(accent,91,81,138,4)
+        person(158,84,34,accent,0,False)
+        for x in (15,252):
+            box(INK,x,47,52,37)
+            for j in range(3):
+                box(accent,x+5,51+j*10,42-j*4,3)
+        for v in range(107,180,18):
+            line(ROAD,0,v,319,v)
+        box(PINK,138,169,44,4)
+        person(65+32*col,104+21*row,34,COATS[s['coat']],col,True)
+        label(MILK,7,205,"ENTER counter / CLEAR exit" if row==0 else "ARROWS walk / CLEAR exit")
+        k=keywait((UP,DOWN,LEFT,RIGHT,OK,EXIT))
+        if k==EXIT:
+            return False
+        if k==OK and row==0:
+            return True
+        if k==UP: row=max(0,row-1)
+        if k==DOWN: row=min(3,row+1)
+        if k==LEFT: col=max(0,col-1)
+        if k==RIGHT: col=min(6,col+1)
 
 def deliver_coupe(s):
     if s['drive'] or s['race']>=0 or s['heat']:
