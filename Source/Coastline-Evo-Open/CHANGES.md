@@ -1,5 +1,10 @@
 # Coastline Evo Open World changes
 
+## INPUT V22
+
+- Fast 3D uses fewer skyline, facade, palm and road marking draws. Storefront signs, expressway geometry and both 3D cameras remain available. Enable Fast under Settings or press 2nd in the journal.
+- Replace all five game files. [Roll back to V21](https://github.com/bhavishb-24/Last-Light/raw/cc34042/01-REQUIRED-Last-Light-Evo-Game.zip).
+
 ## INPUT V21
 
 - Added animated portraits for Mara, Ivo, Ana, Kit and Red in dialogue. Only the mouth area redraws during the brief animation. ENTER continues or dismisses the dialogue.

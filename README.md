@@ -2,7 +2,7 @@
 
 An open-world game for the **TI-84 Evo**. Explore 20 districts, drive in first person, enter shops, and follow the story from downtown to the countryside.
 
-**[Download the game · V21](https://github.com/bhavishb-24/Last-Light/raw/main/01-REQUIRED-Last-Light-Evo-Game.zip)**
+**[Download the game · V22](https://github.com/bhavishb-24/Last-Light/raw/main/01-REQUIRED-Last-Light-Evo-Game.zip)**
 
 [Download the optional loading screen](https://github.com/bhavishb-24/Last-Light/raw/main/02-OPTIONAL-Animated-Loading-Screen.zip)
 
