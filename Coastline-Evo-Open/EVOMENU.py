@@ -207,13 +207,20 @@ def radio_bulletin(s):
 
 def safehouse(s):
     sheet("WEST QUAY / SAFEHOUSE",("UP rest and advance weather",
-          "RIGHT change jacket", "DOWN show checkpoint", "ENTER WAVE radio"),
+          "RIGHT change jacket", "DOWN show checkpoint", "ENTER WAVE radio",
+          "LEFT switch Lena / Sol"),
           "CLEAR leave")
-    key=keywait((UP,RIGHT,DOWN,OK,EXIT))
+    key=keywait((UP,RIGHT,DOWN,LEFT,OK,EXIT))
     if key==UP:
         s['heat']=0
         s['clock']+=28
         notice(s,"Rested / Patrol alert cleared")
+    elif key==LEFT:
+        active=1-s.get('who',0)
+        s['who']=active
+        s['coat']=2 if active else 0
+        s['speed']=0
+        notice(s,"Now playing "+("Sol" if active else "Lena"))
     elif key==RIGHT:
         # The starter jacket is free. Other jackets remain sold at Thread.
         s['coat']=0

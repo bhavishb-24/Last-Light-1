@@ -76,7 +76,8 @@ def venue(s,n):
         from EVOSPORT import pool
         pool(s)
     elif n==10:
-        tell("PALM GARDEN",("Three gold singles are lost.","One west of Kiln Yard.","One south of FM Tower.","One southwest of the Lido."))
+        from EVOSPORT import palm_garden
+        palm_garden(s)
     else:
         chatter=("The signal is yours now.","Try the shelves at Parts.","Bring me the signal valve.","Last ferry leaves at dusk.",
                  "Dispatch needs a rider.","The new jackets just arrived.","The machines still take coins.","I kept a copy of that reel.",
@@ -117,6 +118,8 @@ def interact(s):
 def tick(s,k,dt):
     driving=s['drive']
     limit=14 if driving else (6 if s['shoes'] else 4)
+    if not driving and s.get("fit",0)>s['clock']:
+        limit+=2
     if k==LEFT: s['angle']=(s['angle']-0.39)%TAU
     if k==RIGHT: s['angle']=(s['angle']+0.39)%TAU
     if k==UP: s['speed']=min(limit,max(0,s['speed'])+(3 if driving else limit))
@@ -200,7 +203,7 @@ def play():
     draw.clear()
     skyline(7)
     box(INK,0,84,320,126)
-    label(SUN,12,110,"LAST LIGHT / INPUT V5")
+    label(SUN,12,110,"LAST LIGHT / INPUT V6")
     label(MILK,12,139,"ENTER new story")
     label(MINT,12,164,"2nd load checkpoint")
     label(MILK,12,196,"CLEAR quit")

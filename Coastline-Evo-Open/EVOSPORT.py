@@ -65,3 +65,52 @@ def pool(s):
     prize=score*6
     earn(s,prize)
     tell("POOL RESULTS",("Sunk %d / 3"%score,"Prize $"+str(prize)))
+
+
+def palm_garden(s):
+    sheet("PALM GARDEN",("UP gym workout", "RIGHT play mini golf",
+          "DOWN clues for lost records"),"CLEAR leave")
+    k=keywait((UP,RIGHT,DOWN,EXIT))
+    if k==UP:
+        gym(s)
+    elif k==RIGHT:
+        golf(s)
+    elif k==DOWN:
+        tell("LOST RECORDS",("West of Kiln Yard.","South of FM Tower.",
+                             "Southwest of the Lido."))
+
+def gym(s):
+    for i,move in enumerate((LEFT,RIGHT,LEFT,RIGHT,LEFT,RIGHT)):
+        sheet("PALM GARDEN / GYM",("Cycle %d / 6"%(i+1),
+              "Pedal "+("LEFT" if move==LEFT else "RIGHT")),"CLEAR leave")
+        k=keywait((LEFT,RIGHT,EXIT))
+        if k==EXIT:
+            return
+        if k!=move:
+            notice(s,"Workout stopped / Try again")
+            return
+    s['fit']=s['clock']+30
+    notice(s,"Cardio boost / Faster walking")
+
+def golf(s):
+    power=3
+    sunk=0
+    for distance in (2,5,4):
+        while True:
+            sheet("PALM GARDEN / MINI GOLF",("Hole %d / 3"%(1+sunk),
+                  "Match power to cup distance."),"LEFT/RIGHT power / ENTER putt")
+            for i in range(7):
+                box(GOLD if i==distance else STEEL,15+42*i,119,30,6)
+            box(MINT,15+42*power,133,30,6)
+            k=keywait((LEFT,RIGHT,OK,EXIT))
+            if k==EXIT:
+                return
+            if k==OK:
+                if power!=distance:
+                    tell("MISSED PUTT",("Try the course again anytime.",))
+                    return
+                sunk+=1
+                break
+            power=max(0,min(6,power+(1 if k==RIGHT else -1)))
+    earn(s,15)
+    tell("THREE HOLES CLEARED",("Course prize $15",))
