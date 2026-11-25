@@ -1,5 +1,9 @@
 # Coastline Evo Open World changes
 
+## INPUT V27
+
+- New Story opens with an illustrated West Quay sunset and a picture of the WAVE studio before the controls screen.
+
 ## INPUT V26
 
 - Phone browsing refreshes only the relevant tiles and app hint. Shops retain their headers and update the item preview, cash, and status only as needed. The taxi list refreshes only the destination name.

@@ -266,7 +266,7 @@ def front_menu(show_intro=True):
             if i==selected:
                 box(PINK,4,y-14,3,15)
             label(MILK if i==selected else STEEL,10,y,item)
-        label(MINT,8,181,"INPUT V26")
+        label(MINT,8,181,"INPUT V27")
         label(MILK,8,202,"ENTER select")
         key=keywait((UP,DOWN,OK,MAP,EXIT))
         if key==EXIT or (key==OK and selected==3):
@@ -298,3 +298,24 @@ def menu_settings(settings):
             settings[1]=(settings[1]+(-1 if key==LEFT else 1))%3
         else:
             settings[row]=not settings[row]
+
+def west_quay_opening():
+    box(NIGHT,0,0,320,210)
+    box(VIOLET,0,0,320,49)
+    box((174,91,122),0,49,320,48)
+    disc(SUN,250,63,24)
+    box((39,80,103),0,95,320,42)
+    for x,y,w in ((182,76,16),(203,70,11),(220,83,12),(279,74,17),(302,61,17)):
+        box(NIGHT,x,y,w,96-y)
+    box(INK,0,113,320,97)
+    box((78,65,96),25,51,130,62)
+    box(PINK,23,48,134,4)
+    box(NIGHT,72,79,38,34)
+    box(MINT,30,79,29,17)
+    box(MINT,121,79,27,17)
+    label(SUN,62,73,"WAVE")
+    label(MINT,9,134,"WEST QUAY / DUSK")
+    label(MILK,9,155,"Mara goes off air at midnight.")
+    label(MILK,9,175,"Find WAVE. Go to the counter.")
+    label(SUN,9,200,"ENTER continue")
+    keywait((OK,EXIT))

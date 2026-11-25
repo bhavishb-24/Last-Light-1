@@ -284,7 +284,8 @@ def play():
             print("Check the digits and retry.")
         draw.clear()
     else:
-        tell("WEST QUAY / DUSK",("Mara's station goes silent","at midnight. Her studio is","the WAVE door ahead.","Enter the WAVE door.","Walk UP to the counter."))
+        from EVOSPORT import west_quay_opening
+        west_quay_opening()
     tell("STREET CONTROLS",("ENTER: talk, shop, car, park","2nd: map and district pins","ALPHA: journal / checkpoint","CLEAR: journal and quit","DEL: phone and taxi"))
     s["detail"],s["turn"],perspective=settings
     previous=None
