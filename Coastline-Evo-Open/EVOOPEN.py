@@ -15,16 +15,16 @@ def venue(s,n):
         tell("PARCEL SIGNED  +$45",("The night clerk signs for it.","Dispatch has more work."))
         return
     if n==0 and t==0:
-        tell("MARA / DEAD AIR",("They sold our frequency.","Tonight is our last show.","Ivo taped the deal at the","pier. Ask him for the reel."))
+        tell("MARA / DEAD AIR",("They sold our frequency.","Ivo has a recording of it.","Find the PIER sign at Sun Pier.","Park, walk to it, press ENTER."))
         s['stage']=1
     elif n==7 and t==1:
-        tell("IVO / THE PIER TAPE",("You hear a second voice:","Mara's brother signed it.","The tower needs a $20 valve.","Take $30. Get us on air."))
+        tell("IVO / THE PIER TAPE",("Mara's brother signed the deal.","Take $30 for a signal valve.","Go to PARTS in Glasshouse.","Buy the valve for $20."))
         s['stage']=2
         earn(s,30)
     elif n==2 and t==3:
         if tune():
             s['stage']=4
-            tell("MARA / OPEN CHANNEL",("That's my brother's voice.","Arcade will air it uncut.","Velvet can mask his voice.","Your tape. Your call."))
+            tell("MARA / OPEN CHANNEL",("That's my brother's voice.","PIXEL airs the original tape.","VELVET disguises his voice.","Visit one door to choose."))
     elif t==4 and n in (6,9):
         public=n==6
         s['stage']=5 if public else 6
@@ -189,6 +189,14 @@ def tick(s,k,dt):
                 notice(s,'Circuit complete! +$70')
             else: notice(s,'Gate cleared!')
 
+STORY_HELP=("Enter WAVE at West Quay.",
+            "Put the car in park at PIER.",
+            "PARTS sells the valve for $20.",
+            "Enter FM 84 and tune 3 bands.",
+            "PIXEL: original / VELVET: dub.",
+            "Explore the city or take a job.",
+            "Explore the city or take a job.")
+
 def journal(s):
     ending=("AIRWAVES","ARCHIVE")
     title=ending[s['stage']-5] if s['stage']>=5 else "DEAD AIR / STORY"
@@ -196,8 +204,8 @@ def journal(s):
     count=sum((s['records']>>i)&1 for i in range(3))
     while True:
         mode="Full" if s['detail'] else "Fast"
-        sheet(title,(TASK[s['stage']],"Parcel: "+job,"Rare singles: "+str(count)+"/3",
-                     "Checkpoint: "+passcode(s),"2nd graphics: "+mode),
+        sheet(title,(TASK[s['stage']],STORY_HELP[s['stage']],"Parcel: "+job,"Records "+str(count)+"/3 | 2nd "+mode,
+                     "Checkpoint: "+passcode(s)),
                      "ENTER back / CLEAR quit")
         k=keywait((OK,EXIT,MAP))
         if k!=MAP: return k!=EXIT
@@ -208,7 +216,7 @@ def play():
     draw.clear()
     skyline(7)
     box(INK,0,84,320,126)
-    label(SUN,12,110,"LAST LIGHT / INPUT V10")
+    label(SUN,12,110,"LAST LIGHT / INPUT V11")
     label(MILK,12,139,"ENTER new story")
     label(MINT,12,164,"2nd load checkpoint")
     label(MILK,12,196,"CLEAR quit")

@@ -43,22 +43,21 @@ def uv(cam,x,z):
     return (dx*cam[3]-dz*cam[2],dx*cam[2]+dz*cam[3])
 
 def face(cam,pts,c):
-    pts2=[]
-    for x,y,z in pts:
-        u,d=uv(cam,x,z)
-        pts2.append((u,y,d))
     xs=[]
     ys=[]
-    a=pts2[-1]
-    for b in pts2:
-        if (a[2]>=1)!=(b[2]>=1):
-            f=(1-a[2])/(b[2]-a[2])
-            xs.append(int(160+121*(a[0]+f*(b[0]-a[0]))))
-            ys.append(int(68+121*(cam[4]-a[1]-f*(b[1]-a[1]))))
-        if b[2]>=1:
-            xs.append(int(160+121*b[0]/b[2]))
-            ys.append(int(68+121*(cam[4]-b[1])/b[2]))
-        a=b
+    ax,ay,az=pts[-1]
+    au,ad=uv(cam,ax,az)
+    eye=cam[4]
+    for x,y,z in pts:
+        u,depth=uv(cam,x,z)
+        if (ad>=1)!=(depth>=1):
+            fraction=(1-ad)/(depth-ad)
+            xs.append(int(160+121*(au+fraction*(u-au))))
+            ys.append(int(68+121*(eye-ay-fraction*(y-ay))))
+        if depth>=1:
+            xs.append(int(160+121*u/depth))
+            ys.append(int(68+121*(eye-y)/depth))
+        au,ay,ad=u,y,depth
     if len(xs)>=3 and max(xs)>=0 and min(xs)<320 and max(ys)>=0 and min(ys)<188:
         poly(c,xs,ys)
 
@@ -154,7 +153,7 @@ def render(s):
     def add(bx,bz,kind,i,r):
         u,d=uv(cam,bx,bz)
         if -r<d<far and abs(u)<1.4*max(0,d)+r:
-            things.append((d,kind,i,bx,bz))
+            things.append((d,kind,i,bx,bz,u))
     for i in range(len(BLOCKS)):
         b=BLOCKS[i]
         add(b[0],b[1],0,i,8)
@@ -184,14 +183,12 @@ def render(s):
         bx,bz=center(GATES[s['race']])
         add(bx,bz,6,0,2)
     things.sort()
-    for idx in range(len(things)-1,-1,-1):
-        d,k,i,bx,bz=things[idx]
+    for d,k,i,bx,bz,u in reversed(things):
         if k==0:
             building(cam,BLOCKS[i])
             continue
         if d<1.5 or (k==4 and s['drive']):
             continue
-        u,d=uv(cam,bx,bz)
         px=int(160+121*u/d)
         py=int(68+121*(cam[4]-road_height(bx,bz))/d)
         h=max(5,int(245/d))

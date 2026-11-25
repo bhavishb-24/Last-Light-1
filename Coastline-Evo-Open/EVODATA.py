@@ -307,8 +307,14 @@ def gps(s):
     elif pinned: name='Pin '+name
     elif s['stage']==4 and not s['job']:
         name="Arcade/Club"
-    direction=('N' if dz>3 else 'S' if dz< -3 else '')+('E' if dx>3 else 'W' if dx< -3 else '')
-    return name+' '+direction
+    f,c=sin(s['angle']),cos(s['angle'])
+    side=dx*c-dz*f
+    ahead=dx*f+dz*c
+    distance=int((dx*dx+dz*dz)**.5)
+    direction="HERE" if distance<3 else ("TURN" if ahead<-abs(side)
+               else ("R" if side>max(1,ahead*.5) else
+                     ("L" if side<-max(1,ahead*.5) else "UP")))
+    return name+" "+direction+" "+str(distance)
 
 
 def weather(s):

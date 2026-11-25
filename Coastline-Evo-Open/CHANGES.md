@@ -1,5 +1,12 @@
 # Coastline Evo Open World changes
 
+## INPUT V11
+
+- The 3D renderer clips polygons without a temporary vertex list and reuses coordinates already projected during visibility checks. Fast and Full retain their existing artwork and key-triggered redraw behavior.
+- The HUD shows relative steering and distance to the active destination. UP means ahead, L and R indicate which way to turn, TURN means the destination is behind you, and HERE means it is nearby.
+- Story conversations and the ALPHA journal name the exact signs to look for and the next action. The puzzle, prices and ending requirements are unchanged.
+- From V10, replace EVODATA.py, EVOVIEW.py and EVOOPEN.py. To roll back, use the [V10 ZIP](https://github.com/bhavishb-24/Last-Light/raw/d86d0d2/Coastline-Evo-Open.zip).
+
 ## INPUT V10
 
 - City streets have dashed yellow center lines in both Fast and Full 3D. The raised expressway has white edge lines.
