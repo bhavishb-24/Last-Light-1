@@ -12,6 +12,10 @@ See the [version notes and rollback instructions](Coastline-Evo-Open/CHANGES.md)
 
 [Coastline-Evo-Clip.zip](Coastline-Evo-Clip.zip) shows two sharper stills sampled from the supplied video's first 20 seconds. Each is 96 × 54 with 16 colors. Press ENTER to skip. If you already have V13 or the earlier Clip Edition, replace only EVOSPORT.py and look for CLIP HD on the title menu.
 
+### Native image playback test
+
+[Download the 5 FPS test ZIP](Coastline-Evo-5FPS-Test.zip). Extract it and transfer CLIPTEST.py and all ten .8xv2 pictures with TI Connect Evo. Run CLIPTEST in the Python App. The test displays the slowest frame draw, late frame count and total elapsed time. It runs separately from the game.
+
 ## Compact driving edition
 
 If the full Coastline package runs out of memory on your calculator, try the standalone [Coastline-Evo-Lite.zip](Coastline-Evo-Lite.zip). It has a 12-district route map, delivery jobs, and perspective driving. It omits on-foot exploration and the phone systems. Transfer only LASTLITE.py from the ZIP and run LASTLITE in the Python App.
