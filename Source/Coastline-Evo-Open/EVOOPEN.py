@@ -294,7 +294,7 @@ def play():
         pass
     while True:
         if perspective:
-            render(s,cockpit)
+            previous=render(s,cockpit,previous)
         else:
             from EVOMENU import street_map
             previous=street_map(s,previous)

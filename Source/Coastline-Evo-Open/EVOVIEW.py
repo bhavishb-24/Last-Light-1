@@ -1,3 +1,4 @@
+import EVODATA as data
 from EVODATA import *
 def person(x,y,h,c,step,back):
     # Silhouette reads at full character scale and on distant pedestrians.
@@ -118,7 +119,15 @@ def building(cam,b,detail=False,night=False,plain=False):
     if h<cam[4]:
         face(cam,((l,h,a),(r,h,a),(r,h,f),(l,h,f)),c)
 
-def render(s,first=False):
+def render(s,first=False,previous=None):
+    data.draw_bottom=167
+    try:
+        world(s,first)
+    finally:
+        data.draw_bottom=210
+    return hud(s,previous)
+
+def world(s,first):
     x,z=s['x'],s['z']
     f,c=sin(s['angle']),cos(s['angle'])
     first=first and s['drive']
@@ -257,7 +266,8 @@ def render(s,first=False):
             disc(INK,px,py-h//2,max(1,h//12))
         elif k==6:
             color(GOLD)
-            draw.draw_circle(px,py-h//2,max(4,h//2))
+            if py-h//2+max(4,h//2)<167:
+                draw.draw_circle(px,py-h//2,max(4,h//2))
         else:
             tint=PAINT[s['paint']] if k==4 else (PINK,GOLD)[i]
             angle=s['parkangle'] if k==4 else (1.5708 if i==0 else 0)
@@ -288,14 +298,9 @@ def render(s,first=False):
     label(MILK,174,19,("N","NE","E","SE","S","SW","W","NW")[heading])
     label(MILK,211,19,WEATHER[front])
     label(SUN,273,19,'$'+str(s['cash']))
-    box(INK,0,167,320,43)
+def hud(s,previous):
     route=gps(s)
-    parts=route.split()
-    if len(parts)>2:
-        arrow(216,178,parts[-2],SUN)
-        route=" ".join(parts[:-2])[:17]+" "+parts[-1]
-    label(SUN,5,186,route)
-    if s['heat']>0: label(PINK,228,186,'ALERT '+str(int(s['heat'])))
+    alert='ALERT '+str(int(s['heat'])) if s['heat']>0 else ""
     k,i=closest(s)
     hint="2nd map / ALPHA journal"
     if s['drive']: hint="ENTER park / TRACE view"
@@ -308,7 +313,50 @@ def render(s,first=False):
     elif k=='disc': hint="ENTER collect record"
     elif k=='local': hint='ENTER talk to local'
     elif k=='car': hint="ENTER drive coupe"
-    label(MILK,5,207,s['msg'] if s['ttl']>0 else hint)
+    hint=s['msg'] if s['ttl']>0 else hint
+    n=s['pin'] if s['pin']>=0 and s['race']<0 else goal(s)
+    local=(int(s['x']//2),int(s['z']//2),n)
+    if previous is None:
+        box(INK,0,167,320,43)
+    if previous is None or route!=previous[0]:
+        box(INK,0,167,185,21)
+        parts=route.rsplit(" ",2)
+        if len(parts)==3:
+            name,turn,distance=parts
+            arrow(12,177,turn,SUN)
+            label(SUN,25,185,name[:12]+" "+distance+"u")
+        else:
+            label(SUN,5,185,route)
+    if previous is None or local!=previous[3] or alert!=previous[1]:
+        box(INK,185,167,135,21)
+        if alert:
+            label(PINK,228,185,alert)
+        else:
+            mini_gps(local)
+    if previous is None or hint!=previous[2]:
+        box(INK,0,188,320,22)
+        label(MILK,5,207,hint)
+    return route,alert,hint,local
+
+def mini_gps(local):
+    x,z,n=local
+    x,z=2*x,2*z
+    box(NIGHT,189,168,130,19)
+    for a,b,w,d in STREETS+((139,-8,10,84),):
+        left=max(189,254+int((a-x)*1.5))
+        right=min(319,254+int((a+w-x)*1.5))
+        top=max(168,177-int((b+d-z)*.65))
+        bottom=min(187,177-int((b-z)*.65))
+        if left<right and top<bottom:
+            box(STEEL,left,top,right-left,bottom-top)
+    if n>=0:
+        u,v=door(n)
+        dx,dy=(u-x)*1.5,(z-v)*.65
+        scale=max(1,abs(dx)/61,abs(dy)/8)
+        tx,ty=254+int(dx/scale),177+int(dy/scale)
+        line(PINK,254,177,tx,ty)
+        disc(PINK,tx,ty,2)
+    disc(MINT,254,177,2)
 
 
 def overpass(cam,z):

@@ -24,11 +24,13 @@ NAMES=("West Quay","Glasshouse","FM Tower","Marina",
 def color(c):
     draw.set_color(c[0],c[1],c[2])
 
+draw_bottom=210
+
 def box(c,x,y,w,h):
     x=int(x)
     y=int(y)
     r=min(320,x+int(w))
-    b=min(210,y+int(h))
+    b=min(draw_bottom,y+int(h))
     x=max(0,x)
     y=max(0,y)
     if x<r and y<b:
@@ -40,14 +42,38 @@ def line(c,x,y,u,v):
     draw.draw_line(int(x),int(y),int(u),int(v))
 
 def poly(c,xs,ys):
+    if draw_bottom<210 and max(ys)>=draw_bottom:
+        edge=draw_bottom-1
+        if min(ys)>edge:
+            return
+        xx,yy=[],[]
+        px,py=xs[-1],ys[-1]
+        for x,y in zip(xs,ys):
+            if (py<=edge)!=(y<=edge):
+                xx.append(int(px+(x-px)*(edge-py)/(y-py)))
+                yy.append(edge)
+            if y<=edge:
+                xx.append(x)
+                yy.append(y)
+            px,py=x,y
+        if len(xx)<3:
+            return
+        xs,ys=xx,yy
     color(c)
     draw.fill_poly(xs,ys)
 
 def disc(c,x,y,r):
+    if draw_bottom<210 and y+r>=draw_bottom:
+        for row in range(max(0,y-r),min(draw_bottom,y+r+1)):
+            half=int((r*r-(row-y)**2)**.5)
+            box(c,x-half,row,2*half+1,1)
+        return
     color(c)
     draw.fill_circle(x,y,r)
 
 def label(c,x,y,s):
+    if draw_bottom<210 and y>=draw_bottom:
+        return
     color(c)
     draw.draw_text(x,y,s)
 
