@@ -108,10 +108,13 @@ def render(s,buffer=None):
     cam=(x-6*f,z-6*c,f,c)
     detail=s['detail']
     night=int(s['clock']//90)%2
-    box((48,49,87) if night else (102,80,130),0,0,320,35)
-    box((91,77,122) if night else (202,115,143),0,35,320,33)
+    front=weather(s)
+    sky=((102,80,130),(55,73,103),(125,137,146),(158,93,96))
+    haze=((202,115,143),(88,108,136),(176,181,180),(226,147,113))
+    box((48,49,87) if night and front==0 else sky[front],0,0,320,35)
+    box((91,77,122) if night and front==0 else haze[front],0,35,320,33)
     sx=int(160+140*sin(1-s['angle']))
-    disc(MILK if night else SUN,sx,41,10 if night else 15)
+    if front in (0,3): disc(MILK if night else SUN,sx,41,10 if night else 15)
     for j in range(13 if detail else 3):
         px=(j*37-int(s['angle']%TAU*320/TAU))%352-16
         h=4+(j*17)%14
@@ -150,7 +153,7 @@ def render(s,buffer=None):
         if -8<=ix+off<=105 and 0<=iz<=64:
             ground(cam,ix+off,iz,1.8,0.12,SUN)
     things=[]
-    far=64 if s['detail'] else 33
+    far=24 if front==2 else (64 if detail else 33)
     def add(bx,bz,kind,i,r):
         u,d=uv(cam,bx,bz)
         if -r<d<far and abs(u)<1.4*max(0,d)+r:
@@ -224,7 +227,8 @@ def render(s,buffer=None):
     label(MINT,4,19,NAMES[district(x,z)])
     heading=int((s['angle']%TAU)*8/TAU+0.5)%8
     label(MILK,174,19,("N","NE","E","SE","S","SW","W","NW")[heading])
-    label(SUN,253,19,'$'+str(s['cash']))
+    label(MILK,211,19,WEATHER[front])
+    label(SUN,273,19,'$'+str(s['cash']))
     box(INK,0,167,320,43)
     label(SUN,5,186,gps(s))
     if s['heat']>0: label(PINK,228,186,'ALERT '+str(int(s['heat'])))

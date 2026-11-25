@@ -285,3 +285,9 @@ def gps(s):
         name="Arcade/Club"
     direction=('N' if dz>3 else 'S' if dz< -3 else '')+('E' if dx>3 else 'W' if dx< -3 else '')
     return name+' '+direction
+
+
+def weather(s):
+    return int(s['clock']//28)%4
+
+WEATHER=("Clear","Rain","Fog","Heat")

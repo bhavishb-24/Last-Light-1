@@ -31,6 +31,8 @@ def venue(s,n):
              ("Every radio hears the deal." if public else "A filtered voice hits the air.",
               "Mara lets the tape roll." if public else "Her brother stays anonymous.",
               "The station stays on air.","+$90 / City stays open."))
+    elif n==0:
+        radio_bulletin(s)
     elif n==1:
         shop(s,"GLASSHOUSE SUPPLY",(("Signal valve",20,'stage',3),))
     elif n==5:
@@ -109,8 +111,8 @@ def interact(s):
 def tick(s,k,dt):
     driving=s['drive']
     limit=14 if driving else (6 if s['shoes'] else 4)
-    if k==LEFT: s['angle']=(s['angle']-0.23)%TAU
-    if k==RIGHT: s['angle']=(s['angle']+0.23)%TAU
+    if k==LEFT: s['angle']=(s['angle']-0.39)%TAU
+    if k==RIGHT: s['angle']=(s['angle']+0.39)%TAU
     if k==UP: s['speed']=min(limit,max(0,s['speed'])+(3 if driving else limit))
     if k==DOWN:
         s['speed']=0 if s['speed']>0 else -limit*0.4
@@ -192,7 +194,7 @@ def play():
     draw.clear()
     skyline(7)
     box(INK,0,84,320,126)
-    label(SUN,12,110,"LAST LIGHT / INPUT V3")
+    label(SUN,12,110,"LAST LIGHT / INPUT V4")
     label(MILK,12,139,"ENTER new story")
     label(MINT,12,164,"2nd load checkpoint")
     label(MILK,12,196,"CLEAR quit")
@@ -241,6 +243,8 @@ def play():
             previous=None
         else:
             # Advance once per key so movement stays matched to the picture.
-            tick(s,k,0.22)
+            tick(s,k,0.18)
+            if k in (UP,DOWN) and s['speed']:
+                tick(s,0,0.18)
 
 play()

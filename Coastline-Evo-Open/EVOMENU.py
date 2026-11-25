@@ -235,3 +235,14 @@ def fishing(s):
                 earn(s,18)
                 tell("CATCH AND RELEASE",("Fish released / Tag fee $18",))
                 return
+
+
+def radio_bulletin(s):
+    if s['heat']:
+        bulletin="Patrols active in your area."
+    elif goal(s)>=0:
+        bulletin="Crew heading to "+NAMES[goal(s)]
+    else:
+        bulletin="Sun Pier fishing is open."
+    tell("WAVE / LOCAL RADIO",(bulletin,"Now: "+WEATHER[weather(s)],
+                              "Next: "+WEATHER[(weather(s)+1)%4]))
