@@ -12,28 +12,14 @@ from COASTLIB import (
     pick, region, roadblock, sheet, sin, sync_search,
     tell, unpack, weather
 )
-try:
-    from gc import collect
-except ImportError:
-    def collect():pass
+from gc import collect
 collect()
 from COASTMAP import (
     atlas, render, traffic, title_key
 )
 collect()
-from COASTAPP import (
-    equipment, event_visit, handset, street_tick
-)
-collect()
-
-from COASTFUN import (
-    advance_story, club, fishing, harbor, park_at, radio, shop,
-    social, start_race, tune
-)
-collect()
-
-
 def venue(s,n):
+    from COASTFUN import advance_story,club,fishing,harbor,park_at,radio,shop,start_race,tune
     t=s['stage']
     if t==3 and n==2 and s['who']!=1:
         s['crew'][0]['coat']=s['coat']
@@ -177,10 +163,12 @@ def interact(s):
         s['angle']=s['parkangle']
         notice(s,'UP gas / DOWN brake or back')
     elif k=='door':
+        from COASTAPP import event_visit
         if n!=GOALS[s['stage']] and not (s['stage']==9 and n==9) and event_visit(s):return
         venue(s,n)
         crew(s)['coat']=s['coat']
     elif k=='local':
+        from COASTFUN import social
         social(s,n)
         return
     elif k=='cache':
@@ -207,6 +195,7 @@ def interact(s):
         notice(s,'Find a lit door or your coupe')
 
 def tick(s,k,dt):
+    from COASTAPP import street_tick
     driving=s['drive']
     wet=weather(s) in (1,3)
     limit=(14 if not wet or s['grip'] else 10) if driving else (6 if s['shoes'] else 4)
@@ -387,10 +376,12 @@ def play():
             atlas(s)
             continue
         if k==22:
+            from COASTAPP import equipment
             buffer=[]
             equipment(s)
             continue
         if k==23:
+            from COASTAPP import handset
             buffer=[]
             handset(s)
             continue
