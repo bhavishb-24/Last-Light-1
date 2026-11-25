@@ -106,30 +106,32 @@ def render(s,buffer=None):
     x,z=s['x'],s['z']
     f,c=sin(s['angle']),cos(s['angle'])
     cam=(x-6*f,z-6*c,f,c)
+    detail=s['detail']
     night=int(s['clock']//90)%2
     box((48,49,87) if night else (102,80,130),0,0,320,35)
     box((91,77,122) if night else (202,115,143),0,35,320,33)
     sx=int(160+140*sin(1-s['angle']))
     disc(MILK if night else SUN,sx,41,10 if night else 15)
-    for j in range(13 if s['detail'] else 5):
+    for j in range(13 if detail else 3):
         px=(j*37-int(s['angle']%TAU*320/TAU))%352-16
         h=4+(j*17)%14
         box(NIGHT if night else VIOLET,px,68-h,12+j%5,h)
         if j%3==0: box(SUN,px+3,69-h,4,2)
     box((54,99,132),0,68,320,120)
-    for j in range(3):
+    for j in range(3 if detail else 0):
         box((110,151,166),j*94+14,72+j*3,32-j*4,1)
     ground(cam,-10,-10,120,88,TILE)
     sample(buffer)
     # Continuous road network and sidewalks.
-    for i in range(4):
-        a=i*32
-        if abs(x-a)<48:
-            ground(cam,a-4.5,-10,9,88,WALK)
-    for i in range(3):
-        a=i*32
-        if abs(z-a)<48:
-            ground(cam,-10,a-4.5,120,9,WALK)
+    if detail:
+        for i in range(4):
+            a=i*32
+            if abs(x-a)<48:
+                ground(cam,a-4.5,-10,9,88,WALK)
+        for i in range(3):
+            a=i*32
+            if abs(z-a)<48:
+                ground(cam,-10,a-4.5,120,9,WALK)
     for i in range(4):
         a=i*32
         if abs(x-a)<48:
@@ -160,7 +162,8 @@ def render(s,buffer=None):
         bx,bz=door(i)
         add(bx-1.4,bz,1,i,1)
         bx,bz=center(i)
-        add(bx-5,bz+4,2,i,2)
+        if detail or abs(x-bx)+abs(z-bz)<24:
+            add(bx-5,bz+4,2,i,2)
     for i in range(3):
         if not (s['records'] & (1<<i)):
             bx,bz=RECORDS[i]
@@ -214,7 +217,7 @@ def render(s,buffer=None):
                 sidecar(px,py,max(4,int(390/d)),tint)
             else: car(px,py,int(330/d),tint,False)
     if s['drive']:
-        car(160,142,67,PAINT[s['paint']],True)
+        car(160,142,67,PAINT[s['paint']],detail)
     else:
         person(160,137,46,COATS[s['coat']],s['stride'],True)
     box(INK,0,0,320,21)

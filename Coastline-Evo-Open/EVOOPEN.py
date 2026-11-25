@@ -65,6 +65,8 @@ def venue(s,n):
                 s['x'],s['z']=center(0)
                 notice(s,'West Quay landing')
             else: notice(s,'Fare is $5')
+    elif n==7:
+        fishing(s)
     elif n==10:
         tell("PALM GARDEN",("Three gold singles are lost.","One west of Kiln Yard.","One south of FM Tower.","One southwest of the Lido."))
     else:
@@ -190,7 +192,7 @@ def play():
     draw.clear()
     skyline(7)
     box(INK,0,84,320,126)
-    label(SUN,12,110,"LAST LIGHT / INPUT V2")
+    label(SUN,12,110,"LAST LIGHT / INPUT V3")
     label(MILK,12,139,"ENTER new story")
     label(MINT,12,164,"2nd load checkpoint")
     label(MILK,12,196,"CLEAR quit")

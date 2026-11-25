@@ -173,7 +173,7 @@ def blocked(x,z,r):
 
 def fresh():
     return dict(x=7.0,z=65.0,angle=0.0,cx=3.0,cz=64.0,
-                pin=-1,detail=True,drive=False,speed=0,stage=0,cash=25,bank=0,coat=0,paint=0,
+                pin=-1,detail=False,drive=False,speed=0,stage=0,cash=25,bank=0,coat=0,paint=0,
                 shoes=0,records=0,job=0,race=-1,timer=0.0,clock=0.0,
                 fine=0.0,heat=0.0,px=0.0,pz=0.0,parkangle=0.0,stride=0.0,msg="",ttl=0)
 
