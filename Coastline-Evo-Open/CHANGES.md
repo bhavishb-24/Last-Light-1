@@ -2,7 +2,7 @@
 
 ## V17 fullscreen frame clarity update
 
-- Rebuilt only EVFS010.py, EVFS012.py, EVFS014.py and EVFS016.py from clearer moments in the same sequence. The four frames have capped drawing work and the entire pack uses 3,973 drawing rectangles. The previous fast pack used 3,373, and the first fullscreen pack used 24,313.
+- Rebuilt only EVFS010.py, EVFS012.py, EVFS014.py and EVFS016.py from clearer moments in the same sequence. The four frames share the previous fast pack’s draw budget. The full pack uses 3,373 drawing rectangles, compared with 24,313 in the first fullscreen pack.
 - Replace only those four files. [Previous fast pack](https://github.com/bhavishb-24/Last-Light/raw/7a673da/Coastline-Evo-Fullscreen-Intro.zip).
 
 ## V17 fullscreen pack diagnostics
