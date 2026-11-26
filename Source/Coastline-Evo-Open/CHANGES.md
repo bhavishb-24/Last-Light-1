@@ -1,5 +1,10 @@
 # Coastline Evo Open World changes
 
+## INPUT V29
+
+- Cutscenes retain both portraits between speakers. Only the text, speaker name, and animated mouth change.
+- Blocked forward steps on foot can reuse the street picture and update the HUD. Ambient animation waits for the next world redraw.
+
 ## INPUT V28
 
 - Four story moments now have illustrated location shots and back-and-forth dialogue with animated speaker portraits. Press ENTER to advance.

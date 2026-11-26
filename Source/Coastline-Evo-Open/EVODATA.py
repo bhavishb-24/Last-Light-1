@@ -373,6 +373,10 @@ def tell(title,lines,speaker=None):
         keywait((OK,EXIT))
         return
 
+    hair,skin=portrait(speaker,257)
+    animate_dialogue(257,hair,skin)
+
+def portrait(speaker,x):
     hair,skin,shirt=((INK,(193,128,104),PINK),
                      (ROAD,(224,167,120),BLUE),
                      (VIOLET,(168,106,88),MINT),
@@ -380,14 +384,17 @@ def tell(title,lines,speaker=None):
                      (INK,(121,79,67),GOLD),
                      (VIOLET,(185,124,102),PINK),
                      (ROAD,(207,150,111),MINT))[speaker]
-    box(NIGHT,257,139,55,43)
-    box(shirt,266,172,37,10)
-    box(skin,274,146,21,28)
-    box(hair,272,143,25,8)
+    box(NIGHT,x,139,55,43)
+    box(shirt,x+9,172,37,10)
+    box(skin,x+17,146,21,28)
+    box(hair,x+15,143,25,8)
     if speaker in (0,2,5):
-        box(hair,270,148,5,20)
-    box(INK,278,156,3,2)
-    box(INK,288,156,3,2)
+        box(hair,x+13,148,5,20)
+    box(INK,x+21,156,3,2)
+    box(INK,x+31,156,3,2)
+    return hair,skin
+
+def animate_dialogue(x,hair,skin):
     start=monotonic()
     previous=-1
     while True:
@@ -395,9 +402,27 @@ def tell(title,lines,speaker=None):
             return
         frame=min(6,int((monotonic()-start)*7))
         if frame!=previous:
-            box(skin,281,165,8,4)
-            box(hair,282,166,6,1+2*(frame%2))
+            box(skin,x+24,165,8,4)
+            box(hair,x+25,166,6,1+2*(frame%2))
             previous=frame
+
+def dialogue_pair(who,speaker,reply,lines):
+    sheet("CONVERSATION",(),"ENTER continue")
+    left=portrait(5+who,8)
+    right=portrait(speaker,257)
+    label(MILK,71,170,("Lena","Sol")[who]+" / "+("Mara","Ivo")[speaker])
+    for x,name,text,colors in ((8,("LENA","SOL")[who],(reply,),left),
+                                (257,("MARA","IVO")[speaker],lines,right)):
+        box(NIGHT,14,0,306,42)
+        label(SUN,18,32,name)
+        box(INK,0,43,320,95)
+        for i,line_text in enumerate(text):
+            label(MILK,10,65+21*i,line_text)
+        animate_dialogue(x,*colors)
+        while get_key(0) in (OK,EXIT):
+            pass
+        box(colors[1],x+24,165,8,4)
+        box(colors[0],x+25,166,6,1)
 
 def closest(s):
     x,z=s['x'],s['z']

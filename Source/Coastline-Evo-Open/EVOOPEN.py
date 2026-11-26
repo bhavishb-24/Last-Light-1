@@ -26,11 +26,8 @@ def conversation(s,title,speaker,reply,lines):
     story_shot(title,speaker)
     while get_key(0)==OK:
         pass
-    who=s.get('who',0)
-    tell(("LENA","SOL")[who],(reply,),5+who)
-    while get_key(0)==OK:
-        pass
-    tell(("MARA","IVO")[speaker],lines,speaker)
+    dialogue_pair(s.get('who',0),speaker,reply,lines)
+
 
 def venue(s,n):
     from EVOMENU import shop,tune,safehouse
@@ -303,6 +300,7 @@ def play():
     cockpit=False
     camera_angle=0
     small_turn=False
+    blocked_frame=False
     controls=(UP,DOWN,LEFT,RIGHT,OK,MAP,EXIT,31,23,14)
     while get_key(0)==OK:
         pass
@@ -310,7 +308,7 @@ def play():
         if perspective:
             angle=s['angle']
             difference=abs((angle-camera_angle+TAU/2)%TAU-TAU/2)
-            if previous is not None and small_turn and difference<.60:
+            if previous is not None and (blocked_frame or (small_turn and difference<.60)):
                 previous=hud(s,previous)
             else:
                 previous=render(s,cockpit,previous)
@@ -321,6 +319,7 @@ def play():
         k=keywait(controls)
         while get_key(0)==k:
             pass
+        blocked_frame=False
         small_turn=k in (LEFT,RIGHT) and not s['drive'] and perspective
         if k==14:
             if perspective and s['drive'] and not cockpit:
@@ -347,8 +346,18 @@ def play():
             previous=None
         else:
             # Advance once per key so movement stays matched to the picture.
+            x,z=s['x'],s['z']
+            clock=s['clock']
+            weather_before=weather(s)
             tick(s,k,0.18)
             if k in (UP,DOWN) and s['speed']:
                 tick(s,0,0.18)
+            # Keep the last street picture for a blocked forward step.
+            blocked_frame=(perspective and k==UP and not s['drive']
+                           and s['speed']==0 and s['x']==x and s['z']==z
+                           and s['angle']==camera_angle and s['heat']<=0
+                           and s['race']<0 and weather(s)==weather_before
+                           and int(clock//90)==int(s['clock']//90)
+                           and int(clock//8)==int(s['clock']//8))
 
 play()
